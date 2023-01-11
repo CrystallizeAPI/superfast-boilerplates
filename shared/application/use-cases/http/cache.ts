@@ -170,9 +170,5 @@ export function StoreFrontAwaretHttpCacheHeaderTagger(
     tags: string[],
     prefix: string = '',
 ): HttpCacheHeaders | VarnishHttpCacheHeaders | FastlyHttpCacheHeaders {
-    return HttpCacheHeaderTagger(
-        maxAge,
-        sharedMaxAge,
-        tags.map((tag: string) => `${prefix}-${tag}`),
-    );
+    return HttpCacheHeaderTagger(maxAge, sharedMaxAge, [...tags.map((tag: string) => `${prefix}-${tag}`), prefix]);
 }
