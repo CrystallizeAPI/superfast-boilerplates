@@ -1,3 +1,3 @@
-# Crystallize Furniture v2 - NextJS - Boilerplate
+# Crystallize - NextJS - Boilerplate
 
-todo
+@todo

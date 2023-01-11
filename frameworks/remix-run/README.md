@@ -1,15 +1,15 @@
-# Crystallize Furniture v2 - Remix Run - Boilerplate
+# Crystallize - Remix Run - Boilerplate
 
 # Installation
 
 ```bash
-npx @crystallize/cli-next install furniture-remix
+npx @crystallize/cli-next@latest install remix-run
 ```
 
 And you got your project running thanks to :
 
 ```bash
-cd application
+cd remix-run && application
 npm run dev
 ```
 
