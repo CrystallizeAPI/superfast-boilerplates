@@ -1,0 +1,73 @@
+name: Remix Run
+
+on:
+    push:
+        branches: ['main']
+    pull_request:
+        types: [opened, synchronize, reopened]
+
+jobs:
+    lint:
+        name: 💄 Prettier
+        runs-on: ubuntu-latest
+        steps:
+            - name: ⬇️ Checkout repo
+              uses: actions/checkout@v3
+
+            - uses: actionsx/prettier@v2
+              with:
+                  args: --check . --ignore-path tools/cs/.prettierignore  --config tools/cs/.prettierrc.json
+    test:
+        name: 🧪 Tests
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                node: [16, 18]
+        steps:
+            - name: 🛑 Cancel Previous Runs
+              uses: styfle/cancel-workflow-action@0.11.0
+
+            - name: ⬇️ Checkout repo
+              uses: actions/checkout@v3
+
+            - name: ⎔ Setup node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: ${{ matrix.node }}
+
+            - uses: microsoft/playwright-github-action@v1
+
+            - name: 📥 Download deps
+              run: cd frameworks/remix-run && make install
+
+            - name: 🏄 Run the tests
+              run: |
+                  ln -sf frameworks/remix-run/application/node_modules ./node_modules
+                  cd frameworks/remix-run && make tests
+
+    sync:
+        name: 🍿 Sync
+        if: github.event_name == 'push' && github.ref_name == 'main'
+        runs-on: ubuntu-latest
+        needs: [lint, test]
+        steps:
+            - name: 🛑 Cancel Previous Runs
+              uses: styfle/cancel-workflow-action@0.11.0
+
+            - name: ⎔ Setup node
+              uses: actions/setup-node@v3
+              with:
+                  node-version: 16
+
+            - name: ⬇️ Checkout repo
+              uses: actions/checkout@v3
+              with:
+                  fetch-depth: 0
+
+            - name: 🔑 Setup the SSH key
+              uses: webfactory/ssh-agent@v0.6.0
+              with:
+                  ssh-private-key: ${{ secrets.FURNITURE_REPO_DEPLOY_PRIVATE_KEY }}
+
+            - name: 🚀 Sync it!
+              run: bash tools/releaser/remix-run.bash

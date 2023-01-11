@@ -1,0 +1,9 @@
+{
+    "private": true,
+    "devDependencies": {
+        "prettier": "2.6.0"
+    },
+    "volta": {
+        "node": "16.15.1"
+    }
+}
