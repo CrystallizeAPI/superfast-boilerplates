@@ -31,6 +31,7 @@ forward_and_push_to_standalone_repo()
     COMMIT_AUTHOR_NAME=$(curl -X GET  ${URL} | jq -r '.commit.author.name')
     COMMIT_AUTHOR_EMAIL=$(curl -X GET  ${URL} | jq -r '.commit.author.email')
 
+    echo "Fetching the commit message from ${URL}"
     # We actually commit and push as a new commit in the standalone repo
     cd ${WORKING_DIR}
     git config --local user.email "${COMMIT_AUTHOR_EMAIL}"
