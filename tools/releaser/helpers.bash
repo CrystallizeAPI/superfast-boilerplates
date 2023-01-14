@@ -1,18 +1,18 @@
 
 WORKING_DIR=${SCRIPTPATH}/standalone-repo
-STANDOLANE_REPOSITORY_GIT="git@github.com:CrystallizeAPI/furniture-remix.git"
 ROOT_FOLDER=${SCRIPTPATH}/../../
 SHARED_FOLDER=${ROOT_FOLDER}/shared
 
 clone_and_checkout()
 {
-    BRANCH_NAME=$1
+    BRANCH_NAME=$2
+    STANDALONE_REPO=$1
 
     rm -rf ${WORKING_DIR}
     mkdir -p ${WORKING_DIR}
 
-    echo "Cloning ${STANDOLANE_REPOSITORY_GIT} to ${WORKING_DIR}"
-    git clone ${STANDOLANE_REPOSITORY_GIT} ${WORKING_DIR}
+    echo "Cloning ${STANDALONE_REPO} to ${WORKING_DIR}"
+    git clone ${STANDALONE_REPO} ${WORKING_DIR}
 
     # Create the branch from main if it does not exist
     if ! git show-ref --verify --quiet refs/heads/${BRANCH_NAME}; then
@@ -38,5 +38,5 @@ forward_and_push_to_standalone_repo()
     git add .
     echo "Committing with message: ${COMMIT_MESSAGE} and author ${COMMIT_AUTHOR_NAME} <${COMMIT_AUTHOR_EMAIL}>"
     git commit -m "${COMMIT_MESSAGE}"
-    git push -f origin ${BRANCH_NAME}:${BRANCH_NAME}-temp
+    git push -f origin ${BRANCH_NAME}:${BRANCH_NAME}
 }

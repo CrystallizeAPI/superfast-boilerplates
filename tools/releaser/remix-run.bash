@@ -5,7 +5,7 @@ SCRIPTPATH=$(dirname "${SCRIPT}")
 
 . ${SCRIPTPATH}/helpers.bash
 
-clone_and_checkout ${GITHUB_REF}
+clone_and_checkout "git@github.com:CrystallizeAPI/furniture-remix.git" ${GITHUB_REF}
 
 # We rsync everything first
 rsync -avz --delete --exclude .git ${ROOT_FOLDER}/frameworks/remix-run/ ${WORKING_DIR}/
