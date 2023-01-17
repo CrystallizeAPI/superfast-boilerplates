@@ -1,7 +1,7 @@
 import { useAppContext } from '~/ui/app-context/provider';
 import logo from '~/assets/montonioLogo.svg';
 import { useLocalCart } from '~/ui/hooks/useLocalCart';
-import { useEffect, useState } from 'react';
+import { memo, useEffect, useState } from 'react';
 import useLocalStorage from '@rehooks/local-storage';
 import { Customer } from '@crystallize/js-api-client';
 import { ServiceAPI } from '~/use-cases/service-api';
@@ -20,6 +20,7 @@ export const MontonioButton: React.FC<{
             onClick={onClick}
         >
             <img className="px-1 h-[25px]" src={`${logo}`} height="35" alt="Montonio" />
+            <span className="text-textBlack">{_t('payment.montonio.paywithbanklinks')}</span>
             <span className="text-textBlack">{paying ? _t('payment.processing') : ''}</span>
             <span className="text-black text-2xl"> ›</span>
         </button>
@@ -33,15 +34,17 @@ export const Montonio: React.FC = () => {
     const [customer] = useLocalStorage<Partial<Customer>>('customer', {});
     const [pickupPoints, setPickupPoints] = useState<Record<string, PickupPoint[]>>();
     const [pickupPoint, setPickupPoint] = useState<PickupPoint | undefined>();
+
+    const [banks, setBanks] = useState<any | undefined>();
+    const [bank, setBank] = useState<string | undefined>();
+
     const API = ServiceAPI({ language: state.language, serviceApiUrl: state.serviceApiUrl });
 
     if (isEmpty()) {
         return null;
     }
-
     useEffect(() => {
-        (async () => {
-            const pickupPoints = await API.montonio.fetchPickupPoints();
+        API.montonio.fetchPickupPoints().then((pickupPoints) => {
             const points = Object.keys(pickupPoints).reduce((memo: any, country) => {
                 // we only propose EE for the boilerplate
                 if (country !== 'EE') {
@@ -60,9 +63,21 @@ export const Montonio: React.FC = () => {
                 };
             }, {});
             setPickupPoints(points);
-        })();
+        });
+        API.montonio.fetchBanks().then((banks) => {
+            const availableBanks = Object.keys(banks).reduce((memo: any, country) => {
+                // we only propose EE for the boilerplate
+                if (country !== 'EE') {
+                    return memo;
+                }
+                return {
+                    ...memo,
+                    [country]: banks[country],
+                };
+            }, {});
+            setBanks(availableBanks);
+        });
     }, []);
-
     return (
         <>
             {pickupPoints && (
@@ -96,6 +111,27 @@ export const Montonio: React.FC = () => {
                 </div>
             )}
 
+            {banks && (
+                <div className="flex flex-col gap-2 mb-4">
+                    <p className="text-sm font-semibold mb-3">{_t('payment.montonio.bankConstraint')}</p>
+                    <ul className="grid grid-cols-2 gap-1">
+                        {banks['EE'].payment_methods.map((method: any) => {
+                            return (
+                                <li
+                                    className={`${bank === method.code ? 'selected' : ''}`}
+                                    key={method.code}
+                                    onClick={() => {
+                                        setBank(method.code);
+                                    }}
+                                >
+                                    <img src={method.logo_url} width={100} alt={method.name} />
+                                </li>
+                            );
+                        })}
+                    </ul>
+                </div>
+            )}
+
             {pickupPoint && (
                 <div className="bg-[#fff] p-3 px-4 flex-col gap-2">
                     <p>
@@ -109,7 +145,7 @@ export const Montonio: React.FC = () => {
 
             <MontonioButton
                 paying={paying}
-                disabled={!pickupPoint}
+                disabled={!pickupPoint || !bank}
                 onClick={async () => {
                     setPaying(true);
                     try {
@@ -119,7 +155,7 @@ export const Montonio: React.FC = () => {
                         const link = await ServiceAPI({
                             language: state.language,
                             serviceApiUrl: state.serviceApiUrl,
-                        }).montonio.fetchPaymentLink(cart);
+                        }).montonio.fetchPaymentLink(cart, bank!);
                         window.location.href = link.url;
                     } catch (exception) {
                         console.log(exception);
