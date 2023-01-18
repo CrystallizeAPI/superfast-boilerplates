@@ -1,8 +1,8 @@
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default ({ children }: { children: React.ReactNode }) => {
     return (
         <html>
             <head />
             <body>{children}</body>
         </html>
     );
-}
+};

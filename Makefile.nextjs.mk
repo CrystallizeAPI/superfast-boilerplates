@@ -10,7 +10,11 @@ setup-nextjs:
 
 .PHONY: serve-nextjs
 serve-nextjs: setup-nextjs ## Serve the NextJS Framework
-	@cd frameworks/nextjs/application && npm run dev
+	@cd frameworks/nextjs && $(MAKE) serve
+
+.PHONY: stop-nextjs
+stop-nextjs: setup-nextjs ## Stop the NextJS Framework
+	@cd frameworks/nextjs && $(MAKE) stop
 
 .PHONY: test-nextjs
 test-nextjs: setup-nextjs ## Test NextJS Framework

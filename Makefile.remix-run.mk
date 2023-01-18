@@ -12,6 +12,10 @@ setup-remix-run:
 serve-remix-run: setup-remix-run ## Serve the Remix Run Framework
 	@cd frameworks/remix-run && $(MAKE) serve
 
+.PHONY: stop-remix-run
+stop-remix-run: setup-remix-run ## Stop the Remix Run Framework
+	@cd frameworks/remix-run && $(MAKE) serve
+
 .PHONY: test-remix-run
 test-remix-run: setup-remix-run ## Test Remix Run Framework
 	@cd frameworks/remix-run && $(MAKE) tests
