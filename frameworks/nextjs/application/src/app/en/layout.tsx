@@ -12,9 +12,11 @@ import { headers } from 'next/headers';
 import { Providers } from '~/bridge/ui/Providers';
 import { Header } from '~/ui/components/layout/header';
 import { Footer } from '~/ui/components/layout/footer';
-// import tailwindDefaultTheme from '~/styles/tailwind.default.css';
-// import tailwindDarkTheme from '~/styles/tailwind.dark.css';
-// import tailwindRaibowTheme from '~/styles/tailwind.rainbow.css';
+
+// pick the tailwind config file you want to use and update the config file
+import '~/styles/tailwind.default.css';
+// import '~/styles/tailwind.dark.css';
+// import '~/styles/tailwind.rainbow.css';
 
 async function getData() {
     const requestContext = getContext({
@@ -55,17 +57,6 @@ async function getData() {
     };
 }
 
-// function getTailwindThemeForConfig(theme: string) {
-//     switch (theme) {
-//         case 'dark':
-//             return tailwindDarkTheme;
-//         case 'rainbow':
-//             return tailwindRaibowTheme;
-//         default:
-//             return tailwindDefaultTheme;
-//     }
-// }
-
 export default async ({ children }: { children: React.ReactNode }) => {
     const { frontConfiguration, translations, baseUrl, navigation, footer } = await getData();
     const path = '/en';
@@ -98,7 +89,6 @@ export default async ({ children }: { children: React.ReactNode }) => {
                     }
                 </script>
                 <script defer src="https://pim.crystallize.com/static/frontend-preview-listener.js" />
-                {/* <link rel="stylesheet" href={getTailwindThemeForConfig(frontConfiguration.theme)} /> */}
             </head>
             <body data-theme={frontConfiguration.theme}>
                 <Providers
