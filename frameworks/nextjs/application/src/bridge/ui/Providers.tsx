@@ -5,9 +5,9 @@ import { AppContextProvider } from '~/ui/app-context/provider';
 export function Providers({ language, tenantIdentifier, translations, initialState, children }: any) {
     return (
         <CrystallizeProvider language={language} tenantIdentifier={tenantIdentifier}>
-            {/* <AppContextProvider initialState={initialState} translations={translations}> */}
-            {children}
-            {/* </AppContextProvider> */}
+            <AppContextProvider initialState={initialState} translations={translations}>
+                {children}
+            </AppContextProvider>
         </CrystallizeProvider>
     );
 }

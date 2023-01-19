@@ -5,7 +5,7 @@ install-nextjs:
 
 .PHONY: setup-nextjs
 setup-nextjs: 
-	@rm ./node_modules
+	@rm -f ./node_modules
 	@ln -sf frameworks/nextjs/application/node_modules ./node_modules
 
 .PHONY: serve-nextjs
