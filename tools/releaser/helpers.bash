@@ -27,6 +27,23 @@ forward_and_push_to_standalone_repo()
     BRANCH_NAME=$1
     GIT_SHA=$2
     URL="https://api.github.com/repos/CrystallizeAPI/superfast-boilerplates/commits/${GIT_SHA}"
+
+    attempts=0
+    while [ $attempts -lt 3 ]; do
+        response_code=$(curl -w "%{http_code}" -o /dev/null -s ${URL})
+        if [ "$response_code" -eq 200 ]; then
+            break
+        else
+            echo "${URL} response code is : $response_code"
+        fi
+        attempts=$((attempts+1))
+        sleep 5
+    done
+
+    if [ "$attempts" -eq 3 ]; then
+        echo "${URL} failed after 3 attempts"
+    fi
+
     COMMIT_MESSAGE=$(curl -X GET ${URL} | jq -r '.commit.message')
     COMMIT_AUTHOR_NAME=$(curl -X GET  ${URL} | jq -r '.commit.author.name')
     COMMIT_AUTHOR_EMAIL=$(curl -X GET  ${URL} | jq -r '.commit.author.email')
