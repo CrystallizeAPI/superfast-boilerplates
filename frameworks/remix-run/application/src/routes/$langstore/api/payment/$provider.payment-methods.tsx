@@ -1,6 +1,6 @@
 import { LoaderFunction, json } from '@remix-run/node';
 import fetchAvailableBanks from '~/use-cases/payments/montonio/fetchAvailableBanks';
-import { storage } from '~/core/services.server';
+import { storage } from '~/use-cases/services.server';
 
 export const loader: LoaderFunction = async ({ params }) => {
     if (params.provider !== 'montonio') {
