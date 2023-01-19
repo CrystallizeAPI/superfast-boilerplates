@@ -20,7 +20,7 @@ export const MontonioButton: React.FC<{
             onClick={onClick}
         >
             <img className="px-1 h-[25px]" src={`${logo}`} height="35" alt="Montonio" />
-            <span className="text-textBlack">{_t('payment.montonio.paywithbanklinks')}</span>
+            <span className="text-textBlack">{paying ? '' : _t('payment.montonio.paywithbanklinks')}</span>
             <span className="text-textBlack">{paying ? _t('payment.processing') : ''}</span>
             <span className="text-black text-2xl"> ›</span>
         </button>
@@ -32,13 +32,21 @@ export const Montonio: React.FC = () => {
     const [paying, setPaying] = useState(false);
     const { state, _t } = useAppContext();
     const [customer] = useLocalStorage<Partial<Customer>>('customer', {});
+
     const [pickupPoints, setPickupPoints] = useState<Record<string, PickupPoint[]>>();
     const [pickupPoint, setPickupPoint] = useState<PickupPoint | undefined>();
+    const [pickupSuggestions, setPickupSuggestions] = useState<Record<string, PickupPoint[]>>();
+    const [pickupInput, setPickupInput] = useState('');
 
     const [banks, setBanks] = useState<any | undefined>();
     const [bank, setBank] = useState<string | undefined>();
 
-    const API = ServiceAPI({ language: state.language, serviceApiUrl: state.serviceApiUrl });
+    const [openLocationSelector, setOpenLocationSelector] = useState(false);
+
+    const API = ServiceAPI({
+        language: state.language,
+        serviceApiUrl: state.serviceApiUrl,
+    });
 
     if (isEmpty()) {
         return null;
@@ -63,6 +71,7 @@ export const Montonio: React.FC = () => {
                 };
             }, {});
             setPickupPoints(points);
+            setPickupSuggestions(points);
         });
         API.montonio.fetchBanks().then((banks) => {
             const availableBanks = Object.keys(banks).reduce((memo: any, country) => {
@@ -78,53 +87,92 @@ export const Montonio: React.FC = () => {
             setBanks(availableBanks);
         });
     }, []);
+
+    const onInputChange = (event: any) => {
+        let suggestions: any = { EE: [] };
+        const value = event.target.value;
+        setPickupInput(value);
+        if (value.length > 0) {
+            const regex = new RegExp(`^${value}`, `i`);
+            suggestions['EE'] = pickupSuggestions?.['EE']?.filter((v: any) => v.name.match(regex));
+            setPickupSuggestions(suggestions);
+        } else {
+            setPickupSuggestions(pickupPoints);
+        }
+    };
+
     return (
         <>
             {pickupPoints && (
                 <div className="flex flex-col gap-2 mb-4">
                     <p className="text-sm font-semibold mb-3">{_t('payment.montonio.shippingConstraint')}</p>
-                    <select
-                        defaultValue={''}
-                        onChange={(event) => {
-                            const [country, uuid] = event.target.value.split(':');
-                            setPickupPoint(pickupPoints[country].find((point: PickupPoint) => point.uuid === uuid));
-                        }}
-                        className="px-4 py-4"
-                    >
-                        <option disabled value={''}>
-                            {_t('payment.montonio.selectPickupPoint')}
-                        </option>
-                        {Object.keys(pickupPoints).map((country) => {
-                            return (
-                                <optgroup key={country} label={country}>
-                                    {pickupPoints[country].map((point: PickupPoint) => {
+                    <div>
+                        <div className="bg-white w-full flex justify-between items-center py-2 px-4">
+                            <p>{_t('payment.montonio.selectPickupPoint')}</p>
+                            <span
+                                onClick={() => setOpenLocationSelector(!openLocationSelector)}
+                                className="cursor-pointer"
+                            >
+                                ↓
+                            </span>
+                        </div>
+                        {openLocationSelector && (
+                            <div className="flex flex-col gap-2 bg-white px-3">
+                                <input
+                                    onChange={onInputChange}
+                                    placeholder="Search..."
+                                    value={pickupInput}
+                                    type="text"
+                                    className="border border-black px-4 py-2 mt-2"
+                                />
+                                <div>
+                                    {pickupSuggestions?.['EE']?.map((suggestion: any) => {
                                         return (
-                                            <option key={point.uuid} value={`${point.country}:${point.uuid}`}>
-                                                {point.name}
-                                            </option>
+                                            <div
+                                                key={suggestion.uuid}
+                                                onClick={() => {
+                                                    setPickupInput(suggestion.name);
+                                                    setPickupSuggestions({});
+                                                    setPickupPoint(
+                                                        pickupPoints?.['EE']?.find((p: any) => {
+                                                            return p.uuid === suggestion.uuid;
+                                                        }),
+                                                    );
+                                                }}
+                                                className="cursor-pointer py-2 hover:bg-grey"
+                                            >
+                                                {suggestion.name}
+                                            </div>
                                         );
                                     })}
-                                </optgroup>
-                            );
-                        })}
-                    </select>
+                                </div>
+                            </div>
+                        )}
+                    </div>
                 </div>
             )}
 
             {banks && (
                 <div className="flex flex-col gap-2 mb-4">
-                    <p className="text-sm font-semibold mb-3">{_t('payment.montonio.bankConstraint')}</p>
-                    <ul className="grid grid-cols-2 gap-1">
+                    <p className="text-sm font-semibold mb-3">{_t('payment.montonio.paywithbanklinks')}</p>
+                    <ul className="grid grid-cols-3 gap-2">
                         {banks['EE'].payment_methods.map((method: any) => {
                             return (
                                 <li
-                                    className={`${bank === method.code ? 'selected' : ''}`}
+                                    className={`${
+                                        bank === method.code ? 'selected border-2' : ''
+                                    } cursor-pointer flex items-center justify-center`}
                                     key={method.code}
                                     onClick={() => {
                                         setBank(method.code);
                                     }}
                                 >
-                                    <img src={method.logo_url} width={100} alt={method.name} />
+                                    <img
+                                        src={method.logo_url}
+                                        width={100}
+                                        alt={method.name}
+                                        className="object-contain w-[100px] h-[75px]"
+                                    />
                                 </li>
                             );
                         })}

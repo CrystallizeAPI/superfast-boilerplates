@@ -82,7 +82,7 @@
             "shippingFeature": "Montonio has a shipping feature that is demoed here.",
             "shippingConstraint": "In order to pay you have to pick a Pickup Point.",
             "selectPickupPoint": "Select a pickup point",
-            "paywithbanklinks": "Pay with bank links"
+            "paywithbanklinks": "Select bank to pay with"
         }
     }
 }
