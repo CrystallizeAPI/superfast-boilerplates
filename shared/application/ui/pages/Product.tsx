@@ -22,6 +22,7 @@ export default ({
 }) => {
     const { _t } = useAppContext();
     const { product, preSelectedSku } = data;
+    console.log(data);
 
     const primaryVariant = product.variants.find((variant) => variant.sku === preSelectedSku) ?? product.defaultVariant;
     let [selectedVariant, setSelectedVariant] = useState(primaryVariant);

@@ -27,10 +27,13 @@ export async function authenticate(request: Request): Promise<{ user: any } | un
     unauthorized(4);
 }
 
-export async function isAuthenticated(request: Request): Promise<boolean> {
+export async function isAuthenticated(request: Request): Promise<any> {
     try {
-        await authenticate(request);
-        return true;
+        let user = await authenticate(request);
+        return {
+            email: user?.user.email,
+            status: true,
+        };
     } catch (e) {
         return false;
     }

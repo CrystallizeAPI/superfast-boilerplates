@@ -7,6 +7,7 @@ import { getContext } from '~/use-cases/http/utils';
 import Product from '~/ui/pages/Product';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css';
+import { isAuthenticated } from '~/core/authentication.server';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
@@ -24,7 +25,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const requestContext = getContext(request);
     const path = `/shop/${params.folder}/${params.product}`;
     const { shared } = await getStoreFront(requestContext.host);
-    const data = await dataFetcherForShapePage('product', path, requestContext, params);
+    let user = await isAuthenticated(request);
+
+    const data = await dataFetcherForShapePage(
+        'product',
+        path,
+        requestContext,
+        params,
+        user?.email?.split('@')[1] || null,
+    );
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };
 

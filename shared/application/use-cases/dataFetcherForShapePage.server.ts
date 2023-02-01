@@ -2,7 +2,13 @@ import { RequestContext } from './http/utils';
 import { getStoreFront } from './storefront.server';
 import { CrystallizeAPI } from './crystallize/read';
 
-export default async (shapeIdentifier: string, path: string, request: RequestContext, params?: any) => {
+export default async (
+    shapeIdentifier: string,
+    path: string,
+    request: RequestContext,
+    params?: any,
+    emailDomain?: string,
+) => {
     const { secret } = await getStoreFront(request.host);
     const api = CrystallizeAPI({
         apiClient: secret.apiClient,
@@ -12,7 +18,7 @@ export default async (shapeIdentifier: string, path: string, request: RequestCon
     const url = request.url;
     switch (shapeIdentifier) {
         case 'product':
-            const product = await api.fetchProduct(path);
+            const product = await api.fetchProduct(path, emailDomain);
             if (!product) {
                 throw new Response('Product Not Found', {
                     status: 404,

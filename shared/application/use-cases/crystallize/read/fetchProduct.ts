@@ -1,9 +1,17 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 
-export default async (apiClient: ClientInterface, path: string, version: string, language: string): Promise<any> => {
+export default async (
+    apiClient: ClientInterface,
+    path: string,
+    version: string,
+    language: string,
+    emailDomain?: string,
+): Promise<any> => {
+    let marketIdentifier = emailDomain === 'crystallize.com' ? 'europe-b2c' : '';
+
     const data: { catalogue: any } = await apiClient.catalogueApi(
         `#graphql
-    query ($language: String!, $path: String!, $version: VersionLabel!) {
+    query ($language: String!, $path: String!, $version: VersionLabel!, $marketIdentifier: String!) {
       catalogue(language: $language, path: $path, version: $version) {
         meta: component(id:"meta"){
           content {
@@ -107,6 +115,10 @@ export default async (apiClient: ClientInterface, path: string, version: string,
             name
             price
             currency
+            priceFor(marketIdentifiers: [$marketIdentifier]) {
+                identifier
+                price
+            }
           }
           images {
             variants {
@@ -163,6 +175,10 @@ export default async (apiClient: ClientInterface, path: string, version: string,
         name
         price
         currency
+        priceFor(marketIdentifiers: [$marketIdentifier]) {
+            identifier
+            price
+        }
       }
       description: component(id:"description") {
         content {
@@ -321,6 +337,7 @@ export default async (apiClient: ClientInterface, path: string, version: string,
             language,
             path,
             version: version === 'draft' ? 'draft' : 'published',
+            marketIdentifier,
         },
     );
 

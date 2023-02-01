@@ -7,6 +7,7 @@ export default (variant: APIProductVariant): ProductVariant => {
     const mapper = DataMapper();
     const priceVariants = mapper.API.Object.APIPriceVariantsToPriceVariant(variant.priceVariants ?? []);
     const images = variant.images ?? (variant.firstImage ? [variant.firstImage] : []);
+
     return {
         id: variant.id,
         isDefault: !!variant.isDefault,

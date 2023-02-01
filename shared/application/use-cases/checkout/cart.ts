@@ -140,6 +140,8 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
     const tenantConfig = await api.fetchTenantConfig(apiClient.config.tenantIdentifier);
     const currency = tenantConfig.currency;
 
+    console.log(JSON.stringify(body, null, 2));
+
     const pickStandardPrice = (
         product: Product,
         selectedVariant: ProductVariant,
@@ -188,6 +190,7 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
             currency: string,
         ): ProductPriceVariant => {
             // opinionated: if we have a `Sales` Price we take it
+            console.log('selectedVariant', selectedVariant);
             const variant = selectedVariant?.priceVariants?.find(
                 (price: ProductPriceVariant) =>
                     price?.identifier === 'sales' && price?.currency?.toLowerCase() === currency.toLocaleLowerCase(),

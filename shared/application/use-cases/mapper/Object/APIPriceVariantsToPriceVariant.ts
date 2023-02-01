@@ -11,6 +11,10 @@ export default (variants: ProductPriceVariant[]): Record<string, Price> => {
                 value: priceVariant.price || 0.0,
                 currency: getCurrencyFromCode(priceVariant.currency || 'EUR'),
                 name: priceVariant.name || 'Unkonwn',
+                priceForMarket: {
+                    marketIdentifier: priceVariant.priceFor?.identifier || '',
+                    value: priceVariant.priceFor?.price,
+                },
             },
         };
     }, {});

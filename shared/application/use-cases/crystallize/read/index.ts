@@ -42,8 +42,8 @@ export const CrystallizeAPI = ({
             fetchLandingPage(apiClient, path, version, language).then(mapper.API.Call.fetchLandingPageToLandingPage),
         fetchDocument: (path: string) =>
             fetchDocument(apiClient, path, version, language).then(mapper.API.Call.fetchDocumentToStory),
-        fetchProduct: (path: string): Promise<Product> =>
-            fetchProduct(apiClient, path, version, language).then(mapper.API.Call.fetchProductToProduct),
+        fetchProduct: (path: string, emailDomain?: string): Promise<Product> =>
+            fetchProduct(apiClient, path, version, language, emailDomain).then(mapper.API.Call.fetchProductToProduct),
         fetchFolder: (path: string) =>
             fetchFolder(apiClient, path, version, language).then(mapper.API.Call.fetchFolderToCategory),
         fetchFolderWithChildren: (path: string) =>
