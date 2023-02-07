@@ -67,7 +67,9 @@ export const DiscountedPrice: React.FC<{
                             >
                                 {marketPrice}
                             </CrystallizePrice>
-                            <p className="text-sm font-semibold">Member price</p>
+                            <p className={`${priceSize[size as keyof typeof priceSize].percentage} w-fit mt-2`}>
+                                Member price
+                            </p>
                         </div>
                     )}
                 </div>

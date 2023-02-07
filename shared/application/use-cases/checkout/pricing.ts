@@ -43,7 +43,7 @@ export default function displayPriceFor(
 
     const marketPrice =
         priceVariants[identifiers.default] && priceVariants[identifiers.default].currency.code === currency.code
-            ? priceVariants[identifiers.default].priceForMarket.value
+            ? priceVariants[identifiers.default].priceFor.price
             : 0.0;
 
     if (!discountedPrice) {

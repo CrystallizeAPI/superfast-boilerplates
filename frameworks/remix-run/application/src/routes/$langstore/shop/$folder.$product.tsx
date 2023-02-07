@@ -7,7 +7,7 @@ import { getContext } from '~/use-cases/http/utils';
 import Product from '~/ui/pages/Product';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css';
-import { isAuthenticated } from '~/core/authentication.server';
+import { authenticatedUser } from '~/core/authentication.server';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
@@ -25,7 +25,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const requestContext = getContext(request);
     const path = `/shop/${params.folder}/${params.product}`;
     const { shared } = await getStoreFront(requestContext.host);
-    let user = await isAuthenticated(request);
+    const user = await authenticatedUser(request);
 
     const data = await dataFetcherForShapePage(
         'product',

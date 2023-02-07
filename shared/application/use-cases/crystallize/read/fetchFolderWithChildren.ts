@@ -1,10 +1,18 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 
-export default async (apiClient: ClientInterface, path: string, version: string, language: string) => {
+export default async (
+    apiClient: ClientInterface,
+    path: string,
+    version: string,
+    language: string,
+    emailDomain?: string,
+) => {
+    let marketIdentifier = emailDomain === 'crystallize.com' ? 'europe-b2c' : '';
+
     return (
         await apiClient.catalogueApi(
             `#graphql
-query ($language: String!, $path: String!, $version: VersionLabel) {
+query ($language: String!, $path: String!, $version: VersionLabel, $marketIdentifier: String!) {
     catalogue(language: $language, path: $path, version: $version) {
         id
         name
@@ -75,6 +83,10 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                       name
                                       price
                                       currency
+                                      priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                        identifier
+                                        price
+                                      }
                                     }
                                     images {
                                       variants {
@@ -177,6 +189,16 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                               ...on Product {
                                                 defaultVariant {
                                                   price
+                                                  priceVariants {
+                                                    identifier
+                                                    name
+                                                    price
+                                                    currency
+                                                    priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                                        identifier
+                                                        price
+                                                    }
+                                                  }
                                                   firstImage {
                                                     url
                                                     altText
@@ -227,6 +249,10 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                                     name
                                                     price
                                                     currency
+                                                    priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                                        identifier
+                                                        price
+                                                    }
                                                   }
                                                   firstImage {
                                                     url
@@ -367,6 +393,16 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                               ...on Product {
                                                 defaultVariant {
                                                   price
+                                                  priceVariants {
+                                                    identifier
+                                                    name
+                                                    price
+                                                    currency
+                                                    priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                                        identifier
+                                                        price
+                                                    }
+                                                  }
                                                   firstImage {
                                                     url
                                                     altText
@@ -417,6 +453,10 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                                     name
                                                     price
                                                     currency
+                                                    priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                                        identifier
+                                                        price
+                                                    }
                                                   }
                                                   firstImage {
                                                     url
@@ -499,6 +539,10 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                 name
                                 price
                                 currency
+                                priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                    identifier
+                                    price
+                                }
                               }
                               firstImage {
                                 url
@@ -558,6 +602,10 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                 name
                 price
                 currency
+                priceFor(marketIdentifiers: [$marketIdentifier]) {
+                    identifier
+                    price
+                }
               }
               firstImage {
                 url
@@ -573,6 +621,7 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                 language: 'en',
                 path,
                 version: version === 'draft' ? 'draft' : 'published',
+                marketIdentifier,
             },
         )
     ).catalogue;

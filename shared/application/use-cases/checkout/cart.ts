@@ -132,7 +132,12 @@ export async function handleAndSaveCart(cart: Cart, providedCartId: string): Pro
     return cartWrapper;
 }
 
-export async function hydrateCart(apiClient: ClientInterface, language: string, body: any): Promise<Cart> {
+export async function hydrateCart(
+    apiClient: ClientInterface,
+    language: string,
+    body: any,
+    email?: string,
+): Promise<Cart> {
     const api = CrystallizeAPI({
         apiClient,
         language,
@@ -140,7 +145,8 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
     const tenantConfig = await api.fetchTenantConfig(apiClient.config.tenantIdentifier);
     const currency = tenantConfig.currency;
 
-    console.log(JSON.stringify(body, null, 2));
+    const emailDomain = email?.split('@')[1] || '';
+    const marketIdentifiers = [emailDomain === 'crystallize.com' ? 'europe-b2c' : ''];
 
     const pickStandardPrice = (
         product: Product,
@@ -148,11 +154,17 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
         currency: string,
     ): ProductPriceVariant => {
         // opinionated: if we have a `default` Price we take it
-        const variant = selectedVariant?.priceVariants?.find(
+        let variant = selectedVariant?.priceVariants?.find(
             (price: ProductPriceVariant) =>
                 price?.identifier === 'default' &&
                 price?.currency?.toLocaleLowerCase() === currency.toLocaleLowerCase(),
         );
+
+        //if we have a market price, we take that
+        if (variant?.priceFor?.price && variant?.priceFor?.price < variant?.price!) {
+            variant.price = variant?.priceFor?.price;
+        }
+
         return (
             variant ??
             selectedVariant?.priceVariants?.[0] ?? {
@@ -163,7 +175,7 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
     };
 
     return await handleCartRequestPayload(validatePayload<CartPayload>(body, cartPayload), {
-        hydraterBySkus: createProductHydrater(apiClient).bySkus,
+        hydraterBySkus: createProductHydrater(apiClient, { useSyncApiForSKUs: false, marketIdentifiers }).bySkus,
         currency,
         perProduct: () => {
             return {
@@ -190,7 +202,6 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
             currency: string,
         ): ProductPriceVariant => {
             // opinionated: if we have a `Sales` Price we take it
-            console.log('selectedVariant', selectedVariant);
             const variant = selectedVariant?.priceVariants?.find(
                 (price: ProductPriceVariant) =>
                     price?.identifier === 'sales' && price?.currency?.toLowerCase() === currency.toLocaleLowerCase(),

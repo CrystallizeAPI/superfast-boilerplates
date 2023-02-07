@@ -6,6 +6,7 @@ import { buildMetas } from '~/use-cases/MicrodataBuilder';
 import { getContext } from '~/use-cases/http/utils';
 import AbstractStory from '~/ui/pages/AbstractStory';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
+import { authenticatedUser } from '~/core/authentication.server';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
@@ -19,7 +20,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const requestContext = getContext(request);
     const path = `/stories/${params.story}`;
     const { shared } = await getStoreFront(requestContext.host);
-    const data = await dataFetcherForShapePage('abstract-story', path, requestContext, params);
+    const user = await authenticatedUser(request);
+    const data = await dataFetcherForShapePage(
+        'abstract-story',
+        path,
+        requestContext,
+        params,
+        user.email.split('@')[1] || null,
+    );
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };
 

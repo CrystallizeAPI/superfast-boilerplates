@@ -8,6 +8,7 @@ import { getContext } from '~/use-cases/http/utils';
 import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css';
 import LandingPage from '~/ui/pages/LandingPage';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
+import { authenticate, authenticatedUser } from '~/core/authentication.server';
 
 export let meta: MetaFunction = ({ data }) => {
     return buildMetas(data.data);
@@ -31,7 +32,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const requestContext = getContext(request);
     const path = `/frontpage`;
     const { shared } = await getStoreFront(requestContext.host);
-    const data = await dataFetcherForShapePage('landing-page', path, requestContext, params);
+    const user = await authenticatedUser(request);
+    const data = await dataFetcherForShapePage(
+        'landing-page',
+        path,
+        requestContext,
+        params,
+        user?.email?.split('@')[1] || null,
+    );
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };
 

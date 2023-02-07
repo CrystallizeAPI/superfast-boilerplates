@@ -1,10 +1,18 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 
-export default async (apiClient: ClientInterface, path: string, version: any, language: string) => {
+export default async (
+    apiClient: ClientInterface,
+    path: string,
+    version: any,
+    language: string,
+    emailDomain?: string,
+) => {
+    let marketIdentifier = emailDomain === 'crystallize.com' ? 'europe-b2c' : '';
+
     return (
         await apiClient.catalogueApi(
             `#graphql
-query ($language: String!, $path: String!, $version: VersionLabel) {
+query ($language: String!, $path: String!, $version: VersionLabel, $marketIdentifier: String!) {
     catalogue(path: $path, language: $language, version: $version) {
       ... on Item {
         name
@@ -59,6 +67,11 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                             name
                             price
                             currency
+                            priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                identifier
+                                price
+                            }
+
                           }
                           images {
                             variants {
@@ -168,6 +181,10 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                           name
                                           price
                                           currency
+                                          priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                            identifier
+                                            price
+                                          }
                                         }
                                         firstImage {
                                           url
@@ -219,6 +236,10 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                                           name
                                           price
                                           currency
+                                          priceFor(marketIdentifiers: [$marketIdentifier]) {
+                                            identifier
+                                            price
+                                          }
                                         }
                                         firstImage {
                                           url
@@ -267,6 +288,7 @@ query ($language: String!, $path: String!, $version: VersionLabel) {
                 language,
                 path,
                 version: version === 'draft' ? 'draft' : 'published',
+                marketIdentifier,
             },
         )
     ).catalogue;

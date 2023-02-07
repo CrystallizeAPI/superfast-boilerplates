@@ -1,8 +1,9 @@
 import { Currency } from './Currency';
 
 export type Price = {
-    priceForMarket: {
-        value: number;
+    priceFor: {
+        identifier: string;
+        price: number;
     };
     currency: Currency;
     value: number;

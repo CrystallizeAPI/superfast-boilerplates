@@ -45,7 +45,7 @@ export default async (
 
             //@todo: we have way too many query/fetch here, we need to agregate the query, GraphQL ;) => we can reduce to one call.
             const [category, products, priceRangeAndAttributes] = await Promise.all([
-                api.fetchFolderWithChildren(path),
+                api.fetchFolderWithChildren(path, emailDomain),
                 api.searchOrderBy(path, searchParams.orderBy, searchParams.filters, searchParams.attributes),
                 api.fetchPriceRangeAndAttributes(path),
             ]);
@@ -58,7 +58,7 @@ export default async (
             }
             return { category, products, priceRangeAndAttributes };
         case 'abstract-story':
-            const story = await api.fetchDocument(path);
+            const story = await api.fetchDocument(path, emailDomain);
             if (!story) {
                 throw new Response('Story Mot Found', {
                     status: 404,
@@ -76,7 +76,7 @@ export default async (
                 topic,
             };
         case 'landing-page':
-            return await api.fetchLandingPage(path);
+            return await api.fetchLandingPage(path, emailDomain);
     }
     throw new Error(`No page renderer found for shape ${shapeIdentifier}`);
 };

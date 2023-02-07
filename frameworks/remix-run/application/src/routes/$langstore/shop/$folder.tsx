@@ -9,6 +9,7 @@ import splideStyles from '@splidejs/splide/dist/css/themes/splide-default.min.cs
 import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css';
 import Category from '~/ui/pages/Category';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
+import { authenticatedUser } from '~/core/authentication.server';
 
 export const links: LinksFunction = () => {
     return [
@@ -30,7 +31,14 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const requestContext = getContext(request);
     const path = `/shop/${params.folder}`;
     const { shared } = await getStoreFront(requestContext.host);
-    const data = await dataFetcherForShapePage('category', path, requestContext, params);
+    const user = await authenticatedUser(request);
+    const data = await dataFetcherForShapePage(
+        'category',
+        path,
+        requestContext,
+        params,
+        user?.email?.split('@')[1] || null,
+    );
 
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };

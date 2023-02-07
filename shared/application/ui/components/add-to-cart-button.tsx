@@ -19,8 +19,6 @@ export const AddToCartBtn: React.FC<{
     const { dispatch: contextDispatch, _t } = useAppContext();
     const { add } = useLocalCart();
 
-    console.log('pack', pack[0].variant.priceVariants);
-
     const handleClick = () => {
         setShowTada(true);
         contextDispatch.addItemsToCart(pack.map((packitem: VariantPackItem) => packitem.variant));
@@ -31,9 +29,9 @@ export const AddToCartBtn: React.FC<{
                     name: packitem.variant.name,
                     sku: packitem.variant.sku,
                     price:
-                        packitem.variant.priceVariants.default.priceForMarket.value <
+                        packitem.variant.priceVariants.default.priceFor.price <
                         packitem.variant.priceVariants.default.value
-                            ? packitem.variant.priceVariants.default.priceForMarket.value
+                            ? packitem.variant.priceVariants.default.priceFor.price
                             : packitem.variant.priceVariants.default.value,
                 },
                 packitem.quantity,

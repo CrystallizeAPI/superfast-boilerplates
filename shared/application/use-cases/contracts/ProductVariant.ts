@@ -9,7 +9,6 @@ export type ProductVariant = {
     description?: string;
     sku: string;
     priceVariants: Record<string, Price>;
-    priceForMarket: Record<string, Price>;
     stockLocations: Record<string, StockLocation>;
     images: Image[];
     attributes: Record<string, string>;
