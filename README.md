@@ -49,7 +49,7 @@ There is a `Makefile` and different targets that you MUST use in order to run ea
 
 ### Running the different versions
 
--   `make serve-remixrun`: will run the Remix Run boilerplate.
+-   `make serve-remix-run`: will run the Remix Run boilerplate.
 -   `make serve-nextjs`: will run the NextJS boilerplate.
 
 > Note: `make serve-*` targets rely on the `Makefile` of the framework boilerplate itself.
