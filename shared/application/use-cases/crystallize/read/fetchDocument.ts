@@ -5,12 +5,12 @@ export default async (
     path: string,
     version: string,
     language: string,
-    marketIdentifier?: string,
+    marketIdentifiers?: string,
 ) => {
     return (
         await apiClient.catalogueApi(
             `#graphql
-query ($language: String!, $path: String!, $version: VersionLabel, $marketIdentifier: String!) {
+query ($language: String!, $path: String!, $version: VersionLabel, $marketIdentifiers: String!) {
     catalogue(path: $path, language: $language, version: $version) {
       ... on Item {
         name
@@ -91,7 +91,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                             name
                             price
                             currency
-                            priceFor(marketIdentifiers: [$marketIdentifier]) {
+                            priceFor(marketIdentifiers: [$marketIdentifiers]) {
                                 identifier
                                 price
                             }
@@ -121,7 +121,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                             name
                             price
                             currency
-                            priceFor(marketIdentifiers: [$marketIdentifier]) {
+                            priceFor(marketIdentifiers: [$marketIdentifiers]) {
                                 identifier
                                 price
                             }
@@ -191,7 +191,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                         name
                         price
                         currency
-                        priceFor(marketIdentifiers: [$marketIdentifier]) {
+                        priceFor(marketIdentifiers: [$marketIdentifiers]) {
                             identifier
                             price
                         }
@@ -255,7 +255,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                 language,
                 path,
                 version: version === 'draft' ? 'draft' : 'published',
-                marketIdentifier,
+                marketIdentifiers,
             },
         )
     ).catalogue;

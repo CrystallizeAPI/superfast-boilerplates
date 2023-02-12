@@ -8,7 +8,7 @@ import Product from '~/ui/pages/Product';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css';
 import { authenticatedUser } from '~/core/authentication.server';
-import { getMarketIdentifier } from '~/ui/lib/marketIdentifier';
+import { getMarketIdentifiers } from '~/use-cases/marketIdentifiers';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
@@ -28,7 +28,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const { shared } = await getStoreFront(requestContext.host);
     const user = await authenticatedUser(request);
 
-    const data = await dataFetcherForShapePage('product', path, requestContext, params, getMarketIdentifier(user));
+    const data = await dataFetcherForShapePage('product', path, requestContext, params, getMarketIdentifiers(user));
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };
 

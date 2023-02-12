@@ -5,11 +5,11 @@ export default async (
     path: string,
     version: string,
     language: string,
-    marketIdentifier?: string,
+    marketIdentifiers?: string,
 ): Promise<any> => {
     const data: { catalogue: any } = await apiClient.catalogueApi(
         `#graphql
-    query ($language: String!, $path: String!, $version: VersionLabel!, $marketIdentifier: String!) {
+    query ($language: String!, $path: String!, $version: VersionLabel!, $marketIdentifiers: String!) {
       catalogue(language: $language, path: $path, version: $version) {
         meta: component(id:"meta"){
           content {
@@ -118,7 +118,7 @@ export default async (
             name
             price
             currency
-            priceFor(marketIdentifiers: [$marketIdentifier]) {
+            priceFor(marketIdentifiers: [$marketIdentifiers]) {
                 identifier
                 price
             }
@@ -178,7 +178,7 @@ export default async (
         name
         price
         currency
-        priceFor(marketIdentifiers: [$marketIdentifier]) {
+        priceFor(marketIdentifiers: [$marketIdentifiers]) {
             identifier
             price
         }
@@ -344,7 +344,7 @@ export default async (
             language,
             path,
             version: version === 'draft' ? 'draft' : 'published',
-            marketIdentifier,
+            marketIdentifiers,
         },
     );
 

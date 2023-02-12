@@ -1,6 +1,6 @@
 import { catalogueFetcherGraphqlBuilder, ClientInterface, createNavigationFetcher } from '@crystallize/js-api-client';
 
-export default async (apiClient: ClientInterface, path: string, language: string, marketIdentifier?: string) => {
+export default async (apiClient: ClientInterface, path: string, language: string, marketIdentifiers?: string) => {
     const fetch = createNavigationFetcher(apiClient).byFolders;
     const builder = catalogueFetcherGraphqlBuilder;
     const response = await fetch(path, language, 3, {}, (level) => {
@@ -44,7 +44,7 @@ export default async (apiClient: ClientInterface, path: string, language: string
                                     name: true,
                                     priceFor: {
                                         __args: {
-                                            marketIdentifiers: [marketIdentifier || ''],
+                                            marketIdentifiers: [marketIdentifiers || ''],
                                         },
                                         identifier: true,
                                         price: true,

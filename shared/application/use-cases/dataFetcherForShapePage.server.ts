@@ -7,7 +7,7 @@ export default async (
     path: string,
     request: RequestContext,
     params?: any,
-    marketIdentifier?: string,
+    marketIdentifiers?: string,
 ) => {
     const { secret } = await getStoreFront(request.host);
     const api = CrystallizeAPI({
@@ -18,7 +18,7 @@ export default async (
     const url = request.url;
     switch (shapeIdentifier) {
         case 'product':
-            const product = await api.fetchProduct(path, marketIdentifier);
+            const product = await api.fetchProduct(path, marketIdentifiers);
             if (!product) {
                 throw new Response('Product Not Found', {
                     status: 404,
@@ -45,7 +45,7 @@ export default async (
 
             //@todo: we have way too many query/fetch here, we need to agregate the query, GraphQL ;) => we can reduce to one call.
             const [category, products, priceRangeAndAttributes] = await Promise.all([
-                api.fetchFolderWithChildren(path, marketIdentifier),
+                api.fetchFolderWithChildren(path, marketIdentifiers),
                 api.searchOrderBy(path, searchParams.orderBy, searchParams.filters, searchParams.attributes),
                 api.fetchPriceRangeAndAttributes(path),
             ]);
@@ -58,7 +58,7 @@ export default async (
             }
             return { category, products, priceRangeAndAttributes };
         case 'abstract-story':
-            const story = await api.fetchDocument(path, marketIdentifier);
+            const story = await api.fetchDocument(path, marketIdentifiers);
             if (!story) {
                 throw new Response('Story Mot Found', {
                     status: 404,
@@ -76,7 +76,7 @@ export default async (
                 topic,
             };
         case 'landing-page':
-            return await api.fetchLandingPage(path, marketIdentifier);
+            return await api.fetchLandingPage(path, marketIdentifiers);
     }
     throw new Error(`No page renderer found for shape ${shapeIdentifier}`);
 };
