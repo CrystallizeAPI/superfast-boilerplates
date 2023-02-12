@@ -132,12 +132,7 @@ export async function handleAndSaveCart(cart: Cart, providedCartId: string): Pro
     return cartWrapper;
 }
 
-export async function hydrateCart(
-    apiClient: ClientInterface,
-    language: string,
-    body: any,
-    email?: string,
-): Promise<Cart> {
+export async function hydrateCart(apiClient: ClientInterface, language: string, body: any): Promise<Cart> {
     const api = CrystallizeAPI({
         apiClient,
         language,
@@ -145,7 +140,7 @@ export async function hydrateCart(
     const tenantConfig = await api.fetchTenantConfig(apiClient.config.tenantIdentifier);
     const currency = tenantConfig.currency;
 
-    const emailDomain = email?.split('@')[1] || '';
+    const emailDomain = body?.user?.email?.split('@')[1] || '';
     const marketIdentifiers = [emailDomain === 'crystallize.com' ? 'europe-b2c' : ''];
 
     const pickStandardPrice = (

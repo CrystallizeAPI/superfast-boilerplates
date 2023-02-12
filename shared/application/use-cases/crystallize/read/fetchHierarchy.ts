@@ -1,8 +1,6 @@
 import { catalogueFetcherGraphqlBuilder, ClientInterface, createNavigationFetcher } from '@crystallize/js-api-client';
 
-export default async (apiClient: ClientInterface, path: string, language: string, emailDomain?: string) => {
-    let marketIdentifier = emailDomain === 'crystallize.com' ? 'europe-b2c' : '';
-
+export default async (apiClient: ClientInterface, path: string, language: string, marketIdentifier?: string) => {
     const fetch = createNavigationFetcher(apiClient).byFolders;
     const builder = catalogueFetcherGraphqlBuilder;
     const response = await fetch(path, language, 3, {}, (level) => {

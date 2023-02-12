@@ -5,10 +5,8 @@ export default async (
     path: string,
     version: string,
     language: string,
-    emailDomain?: string,
+    marketIdentifier?: string,
 ): Promise<any> => {
-    let marketIdentifier = emailDomain === 'crystallize.com' ? 'europe-b2c' : '';
-
     const data: { catalogue: any } = await apiClient.catalogueApi(
         `#graphql
     query ($language: String!, $path: String!, $version: VersionLabel!, $marketIdentifier: String!) {
@@ -100,6 +98,11 @@ export default async (
       width
       height
       key
+    }
+    caption {
+        json
+        plainText
+        html
     }
   }
   
@@ -206,7 +209,11 @@ export default async (
         url
         altText
         key
-  
+        caption {
+            plainText
+            json
+            html
+        }
         variants {
           key
           height

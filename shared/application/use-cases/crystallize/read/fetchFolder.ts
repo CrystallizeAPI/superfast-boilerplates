@@ -5,10 +5,8 @@ export default async (
     path: string,
     version: string,
     language: string,
-    emailDomain?: string,
+    marketIdentifier?: string,
 ) => {
-    let marketIdentifier = emailDomain === 'crystallize.com' ? 'europe-b2c' : '';
-
     return (
         await apiClient.catalogueApi(
             `#graphql

@@ -10,6 +10,7 @@ import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css
 import Category from '~/ui/pages/Category';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import { authenticatedUser } from '~/core/authentication.server';
+import { getMarketIdentifier } from '~/ui/lib/marketIdentifier';
 
 export const links: LinksFunction = () => {
     return [
@@ -32,13 +33,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const path = `/shop/${params.folder}`;
     const { shared } = await getStoreFront(requestContext.host);
     const user = await authenticatedUser(request);
-    const data = await dataFetcherForShapePage(
-        'category',
-        path,
-        requestContext,
-        params,
-        user?.email?.split('@')[1] || null,
-    );
+    const data = await dataFetcherForShapePage('category', path, requestContext, params, getMarketIdentifier(user));
 
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };
