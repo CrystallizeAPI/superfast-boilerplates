@@ -7,7 +7,7 @@ export default async (
     path: string,
     request: RequestContext,
     params?: any,
-    marketIdentifiers?: string,
+    marketIdentifiers?: string[],
 ) => {
     const { secret } = await getStoreFront(request.host);
     const api = CrystallizeAPI({

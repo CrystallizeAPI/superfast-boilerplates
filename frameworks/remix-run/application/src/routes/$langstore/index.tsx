@@ -9,7 +9,7 @@ import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css
 import LandingPage from '~/ui/pages/LandingPage';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import { authenticatedUser } from '~/core/authentication.server';
-import { getMarketIdentifiers } from '~/use-cases/marketIdentifiers';
+import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
 
 export let meta: MetaFunction = ({ data }) => {
     return buildMetas(data.data);
@@ -39,7 +39,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         path,
         requestContext,
         params,
-        getMarketIdentifiers(user),
+        marketIdentifiersForUser(user),
     );
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };

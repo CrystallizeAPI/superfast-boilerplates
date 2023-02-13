@@ -10,7 +10,7 @@ import { getContext } from '~/use-cases/http/utils';
 import { Shop } from '~/use-cases/contracts/Shop';
 import ShopPage from '~/ui/pages/Shop';
 import { authenticatedUser } from '~/core/authentication.server';
-import { getMarketIdentifiers } from '~/use-cases/marketIdentifiers';
+import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
 
 export const links: LinksFunction = () => {
     return [{ rel: 'stylesheet', href: splideStyles }];
@@ -34,7 +34,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         isPreview: requestContext.isPreview,
     });
     const user = await authenticatedUser(request);
-    const shop = await api.fetchShop(path, getMarketIdentifiers(user));
+    const shop = await api.fetchShop(path, marketIdentifiersForUser(user));
 
     return json({ shop }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };

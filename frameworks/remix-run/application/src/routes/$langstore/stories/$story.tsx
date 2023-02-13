@@ -7,7 +7,7 @@ import { getContext } from '~/use-cases/http/utils';
 import AbstractStory from '~/ui/pages/AbstractStory';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import { authenticatedUser } from '~/core/authentication.server';
-import { getMarketIdentifiers } from '~/use-cases/marketIdentifiers';
+import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
@@ -27,7 +27,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         path,
         requestContext,
         params,
-        getMarketIdentifiers(user),
+        marketIdentifiersForUser(user),
     );
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };

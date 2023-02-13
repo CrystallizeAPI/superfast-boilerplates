@@ -5,12 +5,12 @@ export default async (
     path: string,
     version: string,
     language: string,
-    marketIdentifiers?: string,
+    marketIdentifiers?: string[],
 ) => {
     return (
         await apiClient.catalogueApi(
             `#graphql
-query ($language: String!, $path: String!, $version: VersionLabel, $marketIdentifiers: String!) {
+query ($language: String!, $path: String!, $version: VersionLabel, $marketIdentifiers: [String!]!) {
     catalogue(language: $language, path: $path, version: $version) {
         id
         name
@@ -81,7 +81,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                                       name
                                       price
                                       currency
-                                      priceFor(marketIdentifiers: [$marketIdentifiers]) {
+                                      priceFor(marketIdentifiers: $marketIdentifiers) {
                                         identifier
                                         price
                                       }
@@ -192,7 +192,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                                                     name
                                                     price
                                                     currency
-                                                    priceFor(marketIdentifiers: [$marketIdentifiers]) {
+                                                    priceFor(marketIdentifiers: $marketIdentifiers) {
                                                         identifier
                                                         price
                                                     }
@@ -247,7 +247,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                                                     name
                                                     price
                                                     currency
-                                                    priceFor(marketIdentifiers: [$marketIdentifiers]) {
+                                                    priceFor(marketIdentifiers: $marketIdentifiers) {
                                                         identifier
                                                         price
                                                     }
@@ -396,7 +396,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                                                     name
                                                     price
                                                     currency
-                                                    priceFor(marketIdentifiers: [$marketIdentifiers]) {
+                                                    priceFor(marketIdentifiers: $marketIdentifiers) {
                                                         identifier
                                                         price
                                                     }
@@ -451,7 +451,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                                                     name
                                                     price
                                                     currency
-                                                    priceFor(marketIdentifiers: [$marketIdentifiers]) {
+                                                    priceFor(marketIdentifiers: $marketIdentifiers) {
                                                         identifier
                                                         price
                                                     }
@@ -537,7 +537,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                                 name
                                 price
                                 currency
-                                priceFor(marketIdentifiers: [$marketIdentifiers]) {
+                                priceFor(marketIdentifiers: $marketIdentifiers) {
                                     identifier
                                     price
                                 }
@@ -600,7 +600,7 @@ query ($language: String!, $path: String!, $version: VersionLabel, $marketIdenti
                 name
                 price
                 currency
-                priceFor(marketIdentifiers: [$marketIdentifiers]) {
+                priceFor(marketIdentifiers: $marketIdentifiers) {
                     identifier
                     price
                 }
