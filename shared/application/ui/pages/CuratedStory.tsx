@@ -28,9 +28,7 @@ export default ({ data: story }: { data: CuratedStory }) => {
 
     const [pack, setPack] = useState<VariantPack>(defaultPack);
     const totalAmountToPay = pack.reduce((memo: number, packitem: VariantPackItem) => {
-        const marketPrice =
-            packitem.variant.priceVariants?.sales?.priceFor?.price ||
-            packitem.variant.priceVariants?.default?.priceFor?.price;
+        const marketPrice = packitem.variant.priceVariants?.default?.priceFor?.price;
         const price = packitem.variant.priceVariants?.sales?.value || packitem.variant.priceVariants?.default?.value;
 
         const priceToUse = marketPrice < price ? marketPrice : price;

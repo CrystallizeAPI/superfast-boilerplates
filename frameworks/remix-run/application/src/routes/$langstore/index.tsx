@@ -41,6 +41,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         params,
         marketIdentifiersForUser(user),
     );
+
     return json({ data }, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier));
 };
 

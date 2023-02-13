@@ -7,7 +7,7 @@ import {
     Price,
 } from '@crystallize/node-service-api-request-handlers';
 import { extractDisountLotFromItemsBasedOnXForYTopic, groupSavingsPerSkus } from './discount';
-import { cartWrapperRepository } from '~/use-cases/services.server';
+import { cartWrapperRepository } from '../services.server';
 import { v4 as uuidv4 } from 'uuid';
 import { validatePayload } from '../http/utils';
 import {
@@ -18,6 +18,7 @@ import {
     ProductVariant,
 } from '@crystallize/js-api-client';
 import { CrystallizeAPI } from '../crystallize/read';
+import { marketIdentifiersForUser } from '../marketIdentifiersForUser';
 
 function alterCartBasedOnDiscounts(wrapper: CartWrapper): CartWrapper {
     const { cart, total } = wrapper.cart;
@@ -109,10 +110,10 @@ export async function handleAndPlaceCart(
 
 export async function handleAndSaveCart(cart: Cart, providedCartId: string): Promise<CartWrapper> {
     let cartId = providedCartId;
-    let cartWrapper = null,
-        storedCartWrapper = null;
+    let cartWrapper: null | CartWrapper = null;
+    let storedCartWrapper: null | CartWrapper = null;
     if (cartId) {
-        storedCartWrapper = await cartWrapperRepository.find(cartId);
+        storedCartWrapper = (await cartWrapperRepository.find(cartId)) || null;
     } else {
         cartId = uuidv4();
     }
@@ -140,8 +141,7 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
     const tenantConfig = await api.fetchTenantConfig(apiClient.config.tenantIdentifier);
     const currency = tenantConfig.currency;
 
-    const emailDomain = body?.user?.email?.split('@')[1] || '';
-    const marketIdentifiers = [emailDomain === 'crystallize.com' ? 'europe-b2c' : ''];
+    const marketIdentifiers = marketIdentifiersForUser(body.user);
 
     const pickStandardPrice = (
         product: Product,
@@ -156,7 +156,6 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
         );
 
         //if we have a market price, we take that
-
         if (variant?.priceFor?.price && variant?.priceFor?.price < variant?.price!) {
             variant.price = variant?.priceFor?.price;
         }
