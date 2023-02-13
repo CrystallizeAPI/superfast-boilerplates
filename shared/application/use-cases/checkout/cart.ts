@@ -157,7 +157,10 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
 
         //if we have a market price, we take that
 
-        variant!.price = variant?.priceFor?.price;
+        if (variant?.priceFor?.price && variant?.priceFor?.price < variant?.price!) {
+            variant.price = variant?.priceFor?.price;
+        }
+
 
         return (
             variant ??
