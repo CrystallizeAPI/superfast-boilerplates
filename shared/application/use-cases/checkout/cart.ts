@@ -161,7 +161,6 @@ export async function hydrateCart(apiClient: ClientInterface, language: string, 
             variant.price = variant?.priceFor?.price;
         }
 
-
         return (
             variant ??
             selectedVariant?.priceVariants?.[0] ?? {
