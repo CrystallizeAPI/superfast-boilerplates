@@ -43,7 +43,7 @@ export default function displayPriceFor(
 
     let discountedPrice =
         discount?.amount ||
-            (priceVariants[identifiers.discounted] && priceVariants[identifiers.discounted].currency.code === currency.code)
+        (priceVariants[identifiers.discounted] && priceVariants[identifiers.discounted].currency.code === currency.code)
             ? priceVariants[identifiers.discounted].value
             : undefined;
 
