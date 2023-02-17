@@ -1,5 +1,8 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
+import * as dotenv from 'dotenv';
+
+dotenv.config();
 
 process.env.STORAGE_DSN = 'memory://';
 process.env.SUPERFAST_HOST = 'furniture.superfast.local';
@@ -8,8 +11,6 @@ process.env.STOREFRONT_LANGUAGE = 'en';
 process.env.STOREFRONT_THEME = 'default';
 process.env.CRYSTALLIZE_TENANT_IDENTIFIER = 'frntr-blueprint';
 process.env.CRYSTAL_PAYMENTS = 'coin,card';
-process.env.CRYSTALLIZE_ACCESS_TOKEN_ID = 'xXx';
-process.env.CRYSTALLIZE_ACCESS_TOKEN_SECRET = 'xXx';
 process.env.HTTP_CACHE_SERVICE = 'varnish';
 process.env.JWT_SECRET = 'xXx';
 
