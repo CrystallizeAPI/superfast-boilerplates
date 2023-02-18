@@ -19,13 +19,15 @@ import {
 } from '@crystallize/js-api-client';
 import { CrystallizeAPI } from '../crystallize/read';
 import { marketIdentifiersForUser } from '../marketIdentifiersForUser';
+import { getVoucher } from './voucher';
 
-function alterCartBasedOnDiscounts(wrapper: CartWrapper): CartWrapper {
+async function alterCartBasedOnDiscounts(wrapper: CartWrapper, apiClient?: ClientInterface): Promise<CartWrapper> {
     const { cart, total } = wrapper.cart;
     const lots = extractDisountLotFromItemsBasedOnXForYTopic(cart.items);
     const savings = groupSavingsPerSkus(lots);
-
     const existingDiscounts = total.discounts || [];
+
+    const voucherDetails = await getVoucher(wrapper.extra?.voucher, apiClient);
 
     let newTotals: Price = {
         gross: 0,
@@ -39,6 +41,22 @@ function alterCartBasedOnDiscounts(wrapper: CartWrapper): CartWrapper {
             },
         ],
     };
+
+    let voucherDiscount;
+
+    if (voucherDetails?.value?.type === "absolute") {
+        voucherDiscount = {
+            amount: voucherDetails.value.number,
+            percent: (voucherDetails.value.number / total.gross) * 100,
+        }
+    }
+
+    if (voucherDetails?.value?.type === "percent") {
+        voucherDiscount = {
+            amount: (total.gross * voucherDetails.value.number) / 100,
+            percent: voucherDetails.value.number,
+        }
+    }
 
     const alteredItems = cart.items.map((item) => {
         const saving = savings[item.variant.sku]?.quantity > 0 ? savings[item.variant.sku] : null;
@@ -76,6 +94,7 @@ function alterCartBasedOnDiscounts(wrapper: CartWrapper): CartWrapper {
                         amount: newTotals.discounts![0].amount,
                         percent: (1 - (newTotals.net + newTotals.discounts![0].amount) / newTotals.net) * 100,
                     },
+                    voucherDiscount,
                 ],
             },
             cart: {
@@ -108,7 +127,7 @@ export async function handleAndPlaceCart(
     return cartWrapper;
 }
 
-export async function handleAndSaveCart(cart: Cart, providedCartId: string): Promise<CartWrapper> {
+export async function handleAndSaveCart(cart: any, providedCartId: string, voucherCode?: string, apiClient?: ClientInterface): Promise<CartWrapper> {
     let cartId = providedCartId;
     let cartWrapper: null | CartWrapper = null;
     let storedCartWrapper: null | CartWrapper = null;
@@ -122,10 +141,11 @@ export async function handleAndSaveCart(cart: Cart, providedCartId: string): Pro
     } else {
         cartWrapper = { ...storedCartWrapper };
         cartWrapper.cart = cart;
+        cartWrapper.extra.voucher = voucherCode;
     }
-
     // handle discount
-    cartWrapper = alterCartBasedOnDiscounts(cartWrapper);
+
+    cartWrapper = await alterCartBasedOnDiscounts(cartWrapper, apiClient);
 
     if (!cartWrapperRepository.save(cartWrapper)) {
         return storedCartWrapper || cartWrapper;

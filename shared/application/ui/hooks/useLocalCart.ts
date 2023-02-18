@@ -6,6 +6,7 @@ const InitializeEmptyLocalCart = (): LocalCart => {
         items: {},
         cartId: '',
         state: 'cart',
+        extra: {},
     };
 };
 
@@ -90,5 +91,27 @@ export function useLocalCart() {
                 items: items,
             });
         },
+        setVoucher: (voucher: string) => {
+            if (voucher === 'delete') {
+                update({
+                    ...cart,
+                    extra: {
+                        ...cart.extra,
+                        voucher: '',
+                    },
+                });
+            }
+            if (isImmutable()) {
+                return;
+            }
+            update({
+                ...cart,
+                extra: {
+                    ...cart.extra,
+                    voucher,
+                },
+            });
+
+        }
     };
 }
