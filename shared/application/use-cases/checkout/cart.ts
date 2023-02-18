@@ -44,18 +44,18 @@ async function alterCartBasedOnDiscounts(wrapper: CartWrapper, apiClient?: Clien
 
     let voucherDiscount;
 
-    if (voucherDetails?.value?.type === "absolute") {
+    if (voucherDetails?.value?.type === 'absolute') {
         voucherDiscount = {
             amount: voucherDetails.value.number,
             percent: (voucherDetails.value.number / total.gross) * 100,
-        }
+        };
     }
 
-    if (voucherDetails?.value?.type === "percent") {
+    if (voucherDetails?.value?.type === 'percent') {
         voucherDiscount = {
             amount: (total.gross * voucherDetails.value.number) / 100,
             percent: voucherDetails.value.number,
-        }
+        };
     }
 
     const alteredItems = cart.items.map((item) => {
@@ -127,7 +127,12 @@ export async function handleAndPlaceCart(
     return cartWrapper;
 }
 
-export async function handleAndSaveCart(cart: any, providedCartId: string, voucherCode?: string, apiClient?: ClientInterface): Promise<CartWrapper> {
+export async function handleAndSaveCart(
+    cart: any,
+    providedCartId: string,
+    voucherCode?: string,
+    apiClient?: ClientInterface,
+): Promise<CartWrapper> {
     let cartId = providedCartId;
     let cartWrapper: null | CartWrapper = null;
     let storedCartWrapper: null | CartWrapper = null;

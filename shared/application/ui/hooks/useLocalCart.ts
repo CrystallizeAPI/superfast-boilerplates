@@ -111,7 +111,6 @@ export function useLocalCart() {
                     voucher,
                 },
             });
-
-        }
+        },
     };
 }
