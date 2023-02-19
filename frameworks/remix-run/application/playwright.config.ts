@@ -1,15 +1,20 @@
 import type { PlaywrightTestConfig } from '@playwright/test';
 import { devices } from '@playwright/test';
-import * as dotenv from 'dotenv';
-
-dotenv.config();
 
 process.env.STORAGE_DSN = 'memory://';
 process.env.SUPERFAST_HOST = 'furniture.superfast.local';
 process.env.STOREFRONT_IDENTIFIER = 'furniture';
 process.env.STOREFRONT_LANGUAGE = 'en';
 process.env.STOREFRONT_THEME = 'default';
+
+/**
+ * NOTE YOU WANT TO CHANGE THAT TO YOUR OWN TENANT IDENTIFIER AND CREDENTIALS from the ENVIRONMENT VARIABLES
+ */
 process.env.CRYSTALLIZE_TENANT_IDENTIFIER = 'frntr-blueprint';
+process.env.CRYSTALLIZE_ACCESS_TOKEN_ID = process.env.PLAYWRIGHT_ACCESS_TOKEN_ID ?? '';
+process.env.CRYSTALLIZE_ACCESS_TOKEN_SECRET = process.env.PLAYWRIGHT_ACCESS_TOKEN_SECRET ?? '';
+/**  */
+
 process.env.CRYSTAL_PAYMENTS = 'coin,card';
 process.env.HTTP_CACHE_SERVICE = 'varnish';
 process.env.JWT_SECRET = 'xXx';

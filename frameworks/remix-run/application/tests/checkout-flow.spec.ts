@@ -93,6 +93,7 @@ test.describe('Checkout flow', () => {
         // Make sure cartId is present in the local storage
         const localStorageCartAtCheckout = await getLocalStorage(page);
         const { state, cartId } = JSON.parse(localStorageCartAtCheckout.cart);
+        console.log(localStorageCartAtCheckout);
         expect(state).toBe('cart');
         expect(cartId.length).toBeGreaterThan(0);
 
@@ -115,6 +116,10 @@ test.describe('Checkout flow', () => {
 
         // Navigate to next step - payment
         await page.click('[data-testid="checkout-next-step-button"]');
+
+        if (!process.env.PLAYWRIGHT_ACCESS_TOKEN_ID) {
+            return;
+        }
 
         // Select the Crystal coin payment method
         await page.click('[data-testid="crystal-coin-payment-button"]');
