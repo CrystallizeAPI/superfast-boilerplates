@@ -1,5 +1,5 @@
 import { ClientInterface } from '@crystallize/js-api-client';
-import { Voucher } from "../contracts/Voucher"
+import { Voucher } from '../contracts/Voucher';
 
 const PATH_PREFIX = '/vouchers/';
 
