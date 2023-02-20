@@ -16,6 +16,7 @@ export function placeCart(
         items: Object.values(cart.items),
         customer,
         options,
+        extra: cart.extra,
     });
 }
 

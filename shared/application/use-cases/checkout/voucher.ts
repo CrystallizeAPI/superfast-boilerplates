@@ -1,4 +1,5 @@
-import { ClientInterface, CrystallizeClient } from '@crystallize/js-api-client';
+import { ClientInterface } from '@crystallize/js-api-client';
+import { Voucher } from "../contracts/Voucher"
 
 const PATH_PREFIX = '/vouchers/';
 
@@ -33,17 +34,6 @@ query GET_VOUCHER($path: String!, $language: String!) {
   }
 }
 `;
-
-type Voucher = {
-    itemId: string;
-    name: string;
-    value: {
-        number: number;
-        unit?: string;
-        type: string;
-    };
-    expires: Date | null;
-};
 
 const voucherTransformer = (input: Record<string, any>): Voucher | null => {
     if (!input) {

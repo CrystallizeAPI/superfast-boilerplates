@@ -92,7 +92,7 @@ export function useLocalCart() {
             });
         },
         setVoucher: (voucher: string) => {
-            if (voucher === 'delete') {
+            if (voucher === 'deletevoucher') {
                 update({
                     ...cart,
                     extra: {

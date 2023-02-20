@@ -6,7 +6,7 @@ import { Input } from './input';
 
 export const VoucherForm: React.FC = () => {
     const { cart: localCart, setVoucher } = useLocalCart();
-    const { remoteCart, loading } = useRemoteCart();
+    const { loading } = useRemoteCart();
     const [voucherValue, setVoucherValue] = useState(localCart?.extra?.voucher ?? '');
 
     return (
@@ -17,10 +17,10 @@ export const VoucherForm: React.FC = () => {
                     name="voucher"
                     label="Coupon Code"
                     placeholder="Coupon Code"
-                    value={voucherValue}
                     onChange={(event) => {
                         setVoucherValue(event.target.value);
                     }}
+                    defaultValue={voucherValue}
                 />
                 <div className="flex gap-2 items-end">
                     <button
@@ -37,7 +37,7 @@ export const VoucherForm: React.FC = () => {
                         type="button"
                         className="bg-grey py-2 px-5 rounded-md text-center"
                         onClick={() => {
-                            setVoucher('deleteall');
+                            setVoucher('deletevoucher');
                             setVoucherValue('');
                         }}
                     >
