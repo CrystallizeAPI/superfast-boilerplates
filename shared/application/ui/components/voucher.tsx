@@ -1,5 +1,6 @@
 import { ClientOnly } from '@crystallize/reactjs-hooks';
 import { useState } from 'react';
+import { useAppContext } from '../app-context/provider';
 import { useLocalCart } from '../hooks/useLocalCart';
 import { useRemoteCart } from '../hooks/useRemoteCart';
 import { Input } from './input';
@@ -8,6 +9,7 @@ export const VoucherForm: React.FC = () => {
     const { cart: localCart, setVoucher } = useLocalCart();
     const { loading } = useRemoteCart();
     const [voucherValue, setVoucherValue] = useState(localCart?.extra?.voucher ?? '');
+    const { _t } = useAppContext();
 
     return (
         <ClientOnly>
@@ -16,7 +18,7 @@ export const VoucherForm: React.FC = () => {
                     type="text"
                     name="voucher"
                     label="Coupon Code"
-                    placeholder="Coupon Code"
+                    placeholder={_t('cart.voucherCode')}
                     onChange={(event) => {
                         setVoucherValue(event.target.value);
                     }}
@@ -31,7 +33,7 @@ export const VoucherForm: React.FC = () => {
                             setVoucher(voucherValue);
                         }}
                     >
-                        {loading ? 'Loading' : 'Use voucher'}
+                        {loading ? _t('loading') : _t('cart.useVoucher')}
                     </button>
                     <button
                         type="button"
@@ -41,7 +43,7 @@ export const VoucherForm: React.FC = () => {
                             setVoucherValue('');
                         }}
                     >
-                        Delete
+                        {_t('delete')}
                     </button>
                 </div>
             </div>
