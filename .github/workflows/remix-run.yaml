@@ -20,9 +20,6 @@ jobs:
     test:
         name: 🧪 Tests
         runs-on: ubuntu-latest
-        strategy:
-            matrix:
-                node: [16, 18]
         steps:
             - name: 🛑 Cancel Previous Runs
               uses: styfle/cancel-workflow-action@0.11.0
@@ -33,7 +30,7 @@ jobs:
             - name: ⎔ Setup node
               uses: actions/setup-node@v3
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 18
 
             - uses: microsoft/playwright-github-action@v1
 
@@ -44,6 +41,11 @@ jobs:
               run: |
                   ln -sf frameworks/remix-run/application/node_modules ./node_modules
                   cd frameworks/remix-run && make tests
+              timeout-minutes: 30
+              env:
+                  PLAYWRIGHT_ACCESS_TOKEN_ID: '${{ secrets.CRYSTALLIZE_ACCESS_TOKEN_ID }}'
+                  PLAYWRIGHT_ACCESS_TOKEN_SECRET: '${{ secrets.CRYSTALLIZE_ACCESS_TOKEN_SECRET }}'
+                  API_URL: 'https://pim.crystallize.com'
 
     sync:
         name: 🍿 Sync
