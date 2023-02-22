@@ -20,17 +20,6 @@ jobs:
     test:
         name: 🧪 Tests
         runs-on: ubuntu-latest
-        continue-on-error: ${{ matrix.deprecated }}
-        strategy:
-            fail-fast: true
-            matrix:
-                node: [16, 18]
-                deprecated: [true, false]
-                exclude:
-                    - node: 16
-                      deprecated: false
-                    - node: 18
-                      deprecated: true
         steps:
             - name: 🛑 Cancel Previous Runs
               uses: styfle/cancel-workflow-action@0.11.0
@@ -41,7 +30,7 @@ jobs:
             - name: ⎔ Setup node
               uses: actions/setup-node@v3
               with:
-                  node-version: ${{ matrix.node }}
+                  node-version: 18
 
             - uses: microsoft/playwright-github-action@v1
 
