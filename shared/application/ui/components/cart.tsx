@@ -9,6 +9,7 @@ import { useAppContext } from '../app-context/provider';
 import { CartItemPrice } from './price';
 import { CartItem } from '@crystallize/node-service-api-request-handlers';
 import { VoucherForm } from './voucher';
+import { Voucher } from '~/use-cases/contracts/Voucher';
 
 export const Cart: React.FC = () => {
     const { isEmpty } = useLocalCart();
@@ -60,7 +61,7 @@ export const HydratedCart: React.FC = () => {
         savings: null,
     };
     const { state: contextState, path, _t } = useAppContext();
-    const voucherCode = remoteCart?.extra?.voucher;
+    const voucher = remoteCart?.extra?.voucher as Voucher | undefined;
 
     if (isEmpty()) {
         return (
@@ -189,10 +190,10 @@ export const HydratedCart: React.FC = () => {
                                             {total.taxAmount}
                                         </CrystallizePrice>
                                     </div>
-                                    {voucherCode && voucherCode !== 'deletevoucher' && (
+                                    {voucher && voucher.code !== '' && (
                                         <div className="flex text-grey3 text-sm justify-between w-60">
                                             <p>{_t('cart.voucherCode')}</p>
-                                            <span>{remoteCart?.extra?.voucher}</span>
+                                            <span>{voucher.code}</span>
                                         </div>
                                     )}
                                     <div className="flex font-bold mt-2 text-lg justify-between w-60 items-end">

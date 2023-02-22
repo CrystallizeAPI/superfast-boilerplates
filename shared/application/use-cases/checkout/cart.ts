@@ -19,14 +19,15 @@ import {
 } from '@crystallize/js-api-client';
 import { CrystallizeAPI } from '../crystallize/read';
 import { marketIdentifiersForUser } from '../marketIdentifiersForUser';
-import { getVoucher, Voucher } from './voucher';
+import { Voucher } from '../contracts/Voucher';
 
-async function alterCartBasedOnDiscounts(wrapper: CartWrapper, voucher?: Voucher): Promise<CartWrapper> {
+async function alterCartBasedOnDiscounts(wrapper: CartWrapper): Promise<CartWrapper> {
     const { cart, total } = wrapper.cart;
     const lots = extractDisountLotFromItemsBasedOnXForYTopic(cart.items);
     const savings = groupSavingsPerSkus(lots);
     const existingDiscounts = total.discounts || [];
 
+    const voucher = wrapper.extra?.voucher as Voucher | undefined;
     let newTotals: Price = {
         gross: 0,
         currency: total.currency,
@@ -40,20 +41,24 @@ async function alterCartBasedOnDiscounts(wrapper: CartWrapper, voucher?: Voucher
         ],
     };
 
-    let voucherDiscount;
+    let voucherDiscount = {
+        amount: 0,
+        percent: 0,
+    };
 
-    if (voucher?.value?.type === 'absolute') {
-        voucherDiscount = {
-            amount: voucher.value.number,
-            percent: (voucher.value.number / total.gross) * 100,
-        };
-    }
-
-    if (voucher?.value?.type === 'percent') {
-        voucherDiscount = {
-            amount: (total.gross * voucher.value.number) / 100,
-            percent: voucher.value.number,
-        };
+    if (voucher) {
+        if (voucher.value.type === 'absolute') {
+            voucherDiscount = {
+                amount: voucher.value.number,
+                percent: (voucher.value.number / total.gross) * 100,
+            };
+        }
+        if (voucher.value.type === 'percent') {
+            voucherDiscount = {
+                amount: (total.gross * voucher.value.number) / 100,
+                percent: voucher.value.number,
+            };
+        }
     }
 
     const alteredItems = cart.items.map((item) => {
@@ -81,8 +86,13 @@ async function alterCartBasedOnDiscounts(wrapper: CartWrapper, voucher?: Voucher
         };
     });
 
+    const newDiscounts = {
+        amount: newTotals.discounts![0].amount,
+        percent: (1 - (newTotals.net + newTotals.discounts![0].amount) / newTotals.net) * 100,
+    };
+
     //REDUCE THE TOTALS BY THE VOUCHER DISCOUNT
-    newTotals.net -= voucherDiscount?.amount || 0;
+    newTotals.net -= voucherDiscount?.amount;
     newTotals.gross = newTotals.net + newTotals.taxAmount;
 
     return {
@@ -90,14 +100,7 @@ async function alterCartBasedOnDiscounts(wrapper: CartWrapper, voucher?: Voucher
         cart: {
             total: {
                 ...newTotals,
-                discounts: [
-                    ...existingDiscounts,
-                    {
-                        amount: newTotals.discounts![0].amount,
-                        percent: (1 - (newTotals.net + newTotals.discounts![0].amount) / newTotals.net) * 100,
-                    },
-                    voucherDiscount,
-                ],
+                discounts: [...existingDiscounts, newDiscounts, voucherDiscount],
             },
             cart: {
                 items: alteredItems,
@@ -130,7 +133,7 @@ export async function handleAndPlaceCart(
     return cartWrapper;
 }
 
-export async function handleAndSaveCart(cart: any, providedCartId: string, voucher?: any): Promise<CartWrapper> {
+export async function handleAndSaveCart(cart: any, providedCartId: string, voucher?: Voucher): Promise<CartWrapper> {
     let cartId = providedCartId;
     let cartWrapper: null | CartWrapper = null;
     let storedCartWrapper: null | CartWrapper = null;
@@ -140,15 +143,15 @@ export async function handleAndSaveCart(cart: any, providedCartId: string, vouch
         cartId = uuidv4();
     }
     if (!storedCartWrapper) {
-        cartWrapper = cartWrapperRepository.create(cart, cartId);
+        (cartWrapper = cartWrapperRepository.create(cart, cartId)), { voucher };
     } else {
         cartWrapper = { ...storedCartWrapper };
         cartWrapper.cart = cart;
-        cartWrapper.extra.voucher = voucher ? voucher?.name : '';
+        cartWrapper.extra.voucher = voucher;
     }
-    // handle discount
 
-    cartWrapper = await alterCartBasedOnDiscounts(cartWrapper, voucher);
+    // handle discount
+    cartWrapper = await alterCartBasedOnDiscounts(cartWrapper);
 
     if (!cartWrapperRepository.save(cartWrapper)) {
         return storedCartWrapper || cartWrapper;

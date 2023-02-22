@@ -22,7 +22,7 @@ export const VoucherForm: React.FC = () => {
                     onChange={(event) => {
                         setVoucherValue(event.target.value);
                     }}
-                    defaultValue={voucherValue}
+                    value={voucherValue}
                 />
                 <div className="flex gap-2 items-end">
                     <button
@@ -33,18 +33,20 @@ export const VoucherForm: React.FC = () => {
                             setVoucher(voucherValue);
                         }}
                     >
-                        {loading ? _t('loading') : _t('cart.useVoucher')}
+                        {loading && localCart?.extra?.voucher ? _t('loading') : _t('cart.useVoucher')}
                     </button>
-                    <button
-                        type="button"
-                        className="bg-grey py-2 px-5 rounded-md text-center"
-                        onClick={() => {
-                            setVoucher('deletevoucher');
-                            setVoucherValue('');
-                        }}
-                    >
-                        {_t('delete')}
-                    </button>
+                    {!loading && voucherValue !== '' && (
+                        <button
+                            type="button"
+                            className="bg-grey py-2 px-5 rounded-md text-center"
+                            onClick={() => {
+                                setVoucherValue('');
+                                setVoucher('');
+                            }}
+                        >
+                            {_t('delete')}
+                        </button>
+                    )}
                 </div>
             </div>
         </ClientOnly>

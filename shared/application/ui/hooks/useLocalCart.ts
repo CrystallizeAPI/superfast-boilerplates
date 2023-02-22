@@ -92,15 +92,6 @@ export function useLocalCart() {
             });
         },
         setVoucher: (voucher: string) => {
-            if (voucher === 'deletevoucher') {
-                update({
-                    ...cart,
-                    extra: {
-                        ...cart.extra,
-                        voucher: '',
-                    },
-                });
-            }
             if (isImmutable()) {
                 return;
             }

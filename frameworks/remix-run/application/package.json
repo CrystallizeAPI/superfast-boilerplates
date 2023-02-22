@@ -14,7 +14,7 @@
         "dev:css:dark": "tailwindcss -c src/styles/tailwind/dark.js -w -i ./src/styles/index.css -o ./src/styles/tailwind.dark.css",
         "dev:css:rainbow": "tailwindcss -c src/styles/tailwind/dark.js -w -i ./src/styles/index.css -o ./src/styles/tailwind.rainbow.css",
         "start": "remix-serve build",
-        "test": "playwright test",
+        "test": "playwright test --headed",
         "playwright:install": "playwright install"
     },
     "dependencies": {
