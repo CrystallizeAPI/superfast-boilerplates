@@ -77,14 +77,14 @@ test.describe('Checkout flow', () => {
         await page.goto(baseURL ?? '');
 
         // Navigate to the first product on the home page
-        await page.locator('a[data-testid="product-link"]').first().click();
+        await page.getByTestId('product-link').first().click();
 
         // Add the product to the cart and navigate to the cart
-        await page.click('[data-testid="add-to-cart-button"]');
-        await page.click('[data-testid="go-to-cart-button"]');
+        await page.getByTestId('add-to-cart-button').click();
+        await page.getByTestId('go-to-cart-button').click();
 
         // Navigate to the checkout flow
-        await page.click('[data-testid="checkout-button"]');
+        await page.getByTestId('checkout-button').click();
 
         await page.waitForResponse(async (response: Response) =>
             response.url().includes('api/cart') ? response.status() === 200 : false,
@@ -93,13 +93,12 @@ test.describe('Checkout flow', () => {
         // Make sure cartId is present in the local storage
         const localStorageCartAtCheckout = await getLocalStorage(page);
         const { state, cartId } = JSON.parse(localStorageCartAtCheckout.cart);
-        console.log(localStorageCartAtCheckout);
         expect(state).toBe('cart');
         expect(cartId.length).toBeGreaterThan(0);
 
         // Select guest checkout
-        await page.locator('[data-testid="guest-checkout-button"]').waitFor({ state: 'visible' });
-        await page.click('[data-testid="guest-checkout-button"]');
+        await page.getByTestId('guest-checkout-button').waitFor({ state: 'visible' });
+        await page.getByTestId('guest-checkout-button').click();
 
         // Fill in the form
         await page.type('input[name=firstname]', customer.firstname);
@@ -115,20 +114,20 @@ test.describe('Checkout flow', () => {
         expect(JSON.parse(localStorage.customer)).toEqual(customer);
 
         // Navigate to next step - payment
-        await page.click('[data-testid="checkout-next-step-button"]');
+        await page.getByTestId('checkout-next-step-button').click();
 
         if (!process.env.PLAYWRIGHT_ACCESS_TOKEN_ID) {
             return;
         }
 
         // Select the Crystal coin payment method
-        await page.click('[data-testid="crystal-coin-payment-button"]');
+        await page.getByTestId('crystal-coin-payment-button').click();
 
         // Confirm the order is placed
-        page.locator('[data-testid="order-placed"]').waitFor({ state: 'visible' });
+        await page.getByTestId('order-placed').waitFor({ state: 'visible' });
 
         // Get the order id
-        orderId = await page.locator('[data-testid="guest-order-id"]').textContent();
+        orderId = await page.getByTestId('guest-order-id"]').textContent();
 
         // Wait until the order appears in the API
         while (retryCount < MAX_RETRY_COUNT) {
