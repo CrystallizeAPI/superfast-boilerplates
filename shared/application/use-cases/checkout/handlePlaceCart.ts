@@ -1,23 +1,28 @@
 import { ClientInterface } from '@crystallize/js-api-client';
-import { Voucher } from '../contracts/Voucher';
-import { CrystallizeAPI } from '../crystallize/read';
+import { Cart, CartWrapper } from '@crystallize/node-service-api-request-handlers';
 import { RequestContext } from '../http/utils';
-import { handleAndPlaceCart, hydrateCart } from './cart';
+import { cartWrapperRepository } from '../services.server';
+import { hydrateCart } from './cart';
+import { handleAndSaveCart } from './handleSaveCart';
 
 export default async (apiClient: ClientInterface, context: RequestContext, body: any, customer: any) => {
-    const cart = await hydrateCart(apiClient, context.language, body);
-    const api = CrystallizeAPI({
-        apiClient,
-        language: context.language,
-    });
-    let voucher: Voucher | undefined;
-    try {
-        voucher = (await api.fetchVoucher(body.extra?.voucher)) as Voucher;
-        if (voucher.isExpired) {
-            voucher = undefined;
-        }
-    } catch (exception) {
-        voucher = undefined;
-    }
+    const [cart, voucher] = await hydrateCart(apiClient, context.language, body);
     return await handleAndPlaceCart(cart, customer, body.cartId as string, body.options, voucher);
 };
+
+async function handleAndPlaceCart(
+    cart: Cart,
+    customer: any,
+    providedCartId: string,
+    options?: any,
+    voucher?: any,
+): Promise<CartWrapper> {
+    const cartWrapper = await handleAndSaveCart(cart, providedCartId, voucher);
+    cartWrapper.customer = customer;
+    cartWrapper.extra = {
+        ...cartWrapper.extra,
+        pickupPoint: options?.pickupPoint,
+    };
+    cartWrapperRepository.place(cartWrapper);
+    return cartWrapper;
+}
