@@ -51,10 +51,15 @@ export default function displayPriceFor(
         discountedPrice = marketPrice;
     }
 
+    console.log('displayPriceFor', discountedPrice, defaultPrice, marketPrice);
+
     return {
         default: defaultPrice,
         discounted: discountedPrice,
-        percent: defaultPrice > 0 ? Math.round(((defaultPrice - discountedPrice!) / defaultPrice) * 100) : 0.0,
+        percent:
+            defaultPrice > 0 && discountedPrice
+                ? Math.round(((defaultPrice - discountedPrice!) / defaultPrice) * 100)
+                : 0.0,
         currency,
         marketPrice,
     };
