@@ -51,8 +51,6 @@ export default function displayPriceFor(
         discountedPrice = marketPrice;
     }
 
-    console.log('displayPriceFor', discountedPrice, defaultPrice, marketPrice);
-
     return {
         default: defaultPrice,
         discounted: discountedPrice,
