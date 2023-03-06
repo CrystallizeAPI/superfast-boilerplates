@@ -3,7 +3,6 @@ import { useLoaderData } from '@remix-run/react';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
-import { isAuthenticated as isServerSideAuthenticated } from '~/core/authentication.server';
 import Order from '~/ui/pages/Order';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
@@ -14,13 +13,15 @@ export const loader: LoaderFunction = async ({ request, params }) => {
     const requestContext = getContext(request);
     const { shared } = await getStoreFront(requestContext.host);
     return json(
-        { orderId: params.id, isServerSideAuthenticated: await isServerSideAuthenticated(request) },
+        {
+            orderId: params.id,
+        },
 
         StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', ['order' + params.id], shared.config.tenantIdentifier),
     );
 };
 
 export default () => {
-    const { orderId, isServerSideAuthenticated } = useLoaderData();
-    return <Order id={orderId} isServerSideAuthenticated={isServerSideAuthenticated} />;
+    const { orderId } = useLoaderData();
+    return <Order id={orderId} />;
 };

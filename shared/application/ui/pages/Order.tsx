@@ -2,15 +2,12 @@ import { useEffect, useState } from 'react';
 import { useAppContext } from '../app-context/provider';
 import { ServiceAPI } from '~/use-cases/service-api';
 import { Price } from '../lib/pricing/pricing-component';
-import { useAuth } from '../hooks/useAuth';
-import { MagickLoginForm } from '../components/checkout-forms/magicklogin';
 import { ClientOnly } from '@crystallize/reactjs-hooks';
 
-export default ({ id, isServerSideAuthenticated }: { id: string; isServerSideAuthenticated: boolean }) => {
+export default ({ id }: { id: string }) => {
     const [tryCount, setTryCount] = useState(0);
     const [order, setOrder] = useState<any | null>(null);
-    const { state: contextState } = useAppContext();
-    const { isAuthenticated } = useAuth();
+    const { state: contextState, _t } = useAppContext();
 
     useEffect(() => {
         let timeout: ReturnType<typeof setTimeout>;
@@ -34,12 +31,14 @@ export default ({ id, isServerSideAuthenticated }: { id: string; isServerSideAut
     return (
         <div className="min-h-[70vh] items-center flex lg:w-content mx-auto w-full">
             <ClientOnly>
-                {order && isAuthenticated && isServerSideAuthenticated ? (
+                {order ? (
                     <div className="w-3/4 mx-auto">
                         <div className="mt-10">
-                            <h1 className="font-bold text-3xl">Order Confirmation</h1>
-                            <p className="mt-4">We've received your order.</p>
-                            <p> The order ID is: #{order.id}.</p>
+                            <h1 className="font-bold text-3xl">{_t('order.confirmation')}</h1>
+                            <p className="mt-4">{_t('order.recievedMessage')}</p>
+                            <p>
+                                {_t('order.orderId')}: #{order.id}.
+                            </p>
                             <div className="mt-2">
                                 {order.cart.map((item: any, index: number) => {
                                     return (
@@ -70,7 +69,7 @@ export default ({ id, isServerSideAuthenticated }: { id: string; isServerSideAut
                                         </p>
                                     </div>
                                     <div className="flex text-grey3 justify-between w-60">
-                                        <p>Tax amount</p>
+                                        <p>{_t('cart.taxAmount')}</p>
                                         <p>
                                             <Price currencyCode={contextState.currency.code}>
                                                 {order.total.gross - order.total.net}
@@ -89,9 +88,7 @@ export default ({ id, isServerSideAuthenticated }: { id: string; isServerSideAut
                     </div>
                 ) : (
                     <div className="min-h-[70vh] items-center justify-center flex max-w-[500px] mx-auto">
-                        <div className="mx-auto items-center justify-center flex w-full ">
-                            <MagickLoginForm title="Login" onlyLogin actionTitle="Login" />
-                        </div>
+                        <div className="mx-auto items-center justify-center flex w-full ">{_t('order.notFound')}</div>
                     </div>
                 )}
             </ClientOnly>

@@ -88,5 +88,11 @@
             "selectPickupPoint": "Velg et hentepunkt",
             "paywithbanklinks": "Velg bank å betale med"
         }
+    },
+    "order": {
+        "notFound": "Bestillingen ble ikke funnet",
+        "confirmation": "Bestillingsbekreftelse",
+        "recievedMessage": "Vi har mottatt din bestilling og vil sende deg en bekreftelse på e-post.",
+        "orderId": "Bestillingsnummer"
     }
 }
