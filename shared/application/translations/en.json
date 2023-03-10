@@ -93,6 +93,8 @@
         "notFound": "Oops! Cannot find your order. Please try again later.",
         "confirmation": "Order confirmation",
         "recievedMessage": "We've received your order.",
-        "orderId": "Order ID"
+        "orderId": "Order ID",
+        "redirectMessage": "Please wait while you're redirected to your order...",
+        "loadingMessage": "Please wait, we’re trying to see if an order with this ID exists..."
     }
 }

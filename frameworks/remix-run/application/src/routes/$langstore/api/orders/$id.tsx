@@ -21,10 +21,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
             user: auth.email,
             orderId: params.id!,
             checkIfOrderBelongsToUser: () => {
-                if (cartWrapper && cartWrapper?.extra?.orderId === params.id) {
-                    return false;
-                }
-                return true;
+                return !(cartWrapper && cartWrapper?.extra?.orderId === params.id);
             },
         }),
     );

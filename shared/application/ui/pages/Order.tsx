@@ -36,7 +36,7 @@ export default ({ id, cartId }: { id: string; cartId?: string }) => {
                     <OrderDisplay order={order} />
                 ) : (
                     <div className="min-h-[70vh] items-center justify-center flex max-w-[500px] mx-auto">
-                        <div className="loader" />
+                        {_t('order.loadingMessage')}
                     </div>
                 )}
             </ClientOnly>

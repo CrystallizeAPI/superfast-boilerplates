@@ -8,7 +8,7 @@ import { OrderDisplay } from '../components/display-order';
 export default ({ cartId }: { cartId: string }) => {
     const { cart: localCart, empty } = useLocalCart();
     const [tryCount, setTryCount] = useState(0);
-    const { state: appContextState, path } = useAppContext();
+    const { state: appContextState, path, _t } = useAppContext();
     const navigate = useNavigate();
 
     useEffect(() => {
@@ -42,5 +42,5 @@ export default ({ cartId }: { cartId: string }) => {
         return () => clearTimeout(timeout);
     }, [cartId, tryCount]);
 
-    return <div></div>;
+    return <div className="items-center justify-center flex max-w-[500px] mx-auto">{_t('order.redirectMessage')}</div>;
 };
