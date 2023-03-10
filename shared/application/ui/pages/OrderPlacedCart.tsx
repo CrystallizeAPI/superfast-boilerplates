@@ -3,7 +3,6 @@ import { useLocalCart } from '../hooks/useLocalCart';
 import { ServiceAPI } from '~/use-cases/service-api';
 import { useAppContext } from '../app-context/provider';
 import useNavigate from '~/bridge/ui/useNavigate';
-import { OrderDisplay } from '../components/display-order';
 
 export default ({ cartId }: { cartId: string }) => {
     const { cart: localCart, empty } = useLocalCart();
@@ -42,5 +41,10 @@ export default ({ cartId }: { cartId: string }) => {
         return () => clearTimeout(timeout);
     }, [cartId, tryCount]);
 
-    return <div className="items-center justify-center flex max-w-[500px] mx-auto">{_t('order.redirectMessage')}</div>;
+    return (
+        <div className="items-center justify-center flex max-w-[500px] mx-auto flex-row">
+            <div className="loader mr-3" />
+            {_t('order.redirectMessage')}
+        </div>
+    );
 };

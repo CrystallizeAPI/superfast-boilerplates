@@ -15,14 +15,28 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 
     let cartWrapper: CartWrapper | null | undefined = cartId ? await cartWrapperRepository.find(cartId) : null;
 
-    return privateJson(
-        await handleOrderRequestPayload(null, {
+    try {
+        const order = await handleOrderRequestPayload(null, {
             fetcherById: createOrderFetcher(storefront.apiClient).byId,
             user: auth.email,
             orderId: params.id!,
             checkIfOrderBelongsToUser: () => {
                 return !(cartWrapper && cartWrapper?.extra?.orderId === params.id);
             },
-        }),
-    );
+        });
+        return privateJson(order);
+    } catch (exception: any) {
+        if (exception?.status === 403) {
+            throw new Response(exception.message, {
+                status: 403,
+                statusText: exception.message,
+            });
+        }
+        console.log('exception', exception);
+    }
+
+    throw new Response('Order Not Found', {
+        status: 404,
+        statusText: 'Order Not Found',
+    });
 };
