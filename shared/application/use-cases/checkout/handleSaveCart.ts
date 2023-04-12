@@ -32,7 +32,6 @@ export async function handleAndSaveCart(cart: any, providedCartId: string, vouch
     const savings = groupSavingsPerSkus(lots);
     cartWrapper = alterCartItemsAndCartTotalsBasedOnSavings(cartWrapper, savings);
     if (cartWrapper?.extra?.voucher) cartWrapper = alterCartTotalsBasedOnVouchers(cartWrapper);
-
     cartWrapper.extra = {
         ...cartWrapper.extra,
         discounts: {

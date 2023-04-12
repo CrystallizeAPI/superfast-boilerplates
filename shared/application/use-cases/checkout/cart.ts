@@ -29,6 +29,7 @@ export async function hydrateCart(
         apiClient,
         language,
     });
+
     const tenantConfig = await api.fetchTenantConfig(apiClient.config.tenantIdentifier);
     const currency = tenantConfig.currency;
 
@@ -140,7 +141,6 @@ export const alterCartItemsAndCartTotalsBasedOnSavings = (cartWrapper: CartWrapp
             },
         ],
     };
-
     const alteredItems: CartItem[] = cartWrapper.cart.cart.items.map((item: CartItem) => {
         const saving = savings[item.variant.sku]?.quantity > 0 ? savings[item.variant.sku] : null;
         const savingAmount = saving?.amount || 0;
@@ -154,7 +154,7 @@ export const alterCartItemsAndCartTotalsBasedOnSavings = (cartWrapper: CartWrapp
         newTotals.taxAmount += taxAmount;
         newTotals.gross += grossAmount;
         newTotals.net += netAmount;
-
+        newTotals.discounts![0].amount += savingAmount;
         return {
             ...item,
             price: {
@@ -167,6 +167,10 @@ export const alterCartItemsAndCartTotalsBasedOnSavings = (cartWrapper: CartWrapp
             },
         };
     });
+
+    newTotals.discounts![0].percent =
+        (newTotals.discounts![0].amount / (newTotals.net + newTotals.discounts![0].amount)) * 100;
+
     return {
         ...cartWrapper,
         cart: {
@@ -204,13 +208,38 @@ export const alterCartTotalsBasedOnVouchers = (wrapper: CartWrapper) => {
             };
         }
     }
-    const currentCartTaxPercentage = (wrapper.cart.total.taxAmount / wrapper.cart.total.net) * 100;
 
-    wrapper.cart.total.net -= voucherDiscount?.amount;
+    const VoucherDiscountPercentage = (voucherDiscount?.amount / wrapper.cart.total.net) * 100;
 
-    wrapper.cart.total.taxAmount = +((wrapper.cart.total.net * currentCartTaxPercentage) / 100).toFixed(2);
+    const newWeightedTotal = {
+        net: 0,
+        taxAmount: 0,
+        gross: 0,
+    };
 
-    wrapper.cart.total.gross = wrapper.cart.total.net + wrapper.cart.total.taxAmount;
+    // Using Weighted Average to calculate the new price after Voucher is applied
+    // Items after Weighted Voucher can be shown in the cart if a usecase arises
+    const itemsAfterWeightedVoucher = wrapper.cart.cart.items.map((item) => {
+        const newItemsNet = item.price.net - (item.price.net * VoucherDiscountPercentage) / 100;
+        const newTaxAmount = (newItemsNet * (item.product?.vatType?.percent || 0)) / 100;
+        const newItemGross = newItemsNet + newTaxAmount;
+        newWeightedTotal.net += newItemsNet;
+        newWeightedTotal.taxAmount += newTaxAmount;
+        newWeightedTotal.gross += newItemGross;
+        return {
+            ...item,
+            price: {
+                ...item.price,
+                net: newItemsNet,
+                taxAmount: newTaxAmount,
+                gross: newItemGross,
+            },
+        };
+    });
+
+    wrapper.cart.total.taxAmount = +newWeightedTotal.taxAmount.toFixed(2);
+    wrapper.cart.total.gross = +newWeightedTotal.gross.toFixed(2);
+    wrapper.cart.total.net = +newWeightedTotal.net.toFixed(2);
 
     return {
         ...wrapper,
