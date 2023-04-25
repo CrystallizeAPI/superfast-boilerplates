@@ -6,6 +6,7 @@ import { StockLocation } from '../../../use-cases/contracts/StockLocation';
 const StockIndicators: React.FC<{ location: StockLocation }> = ({ location }) => {
     const { _t } = useAppContext();
     const stock = location.stock || 0;
+    console.log(StockIcon);
     if (stock < 1) {
         return (
             <>

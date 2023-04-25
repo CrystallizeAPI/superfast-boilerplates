@@ -20,9 +20,10 @@ import '~/styles/tailwind.default.css';
 
 async function getData() {
     const requestContext = getContext({
-        url: 'https://furniture.superpast.local/en',
+        url: 'https://furniture.superfast.local/en',
         headers: headers(),
     });
+
     if (!isValidLanguageMarket(requestContext.language, requestContext.market)) {
         // HOW?
     }
@@ -31,17 +32,17 @@ async function getData() {
         apiClient: secret.apiClient,
         language: requestContext.language,
     });
+
     const [navigation, tenantConfig, translations, footer] = await Promise.all([
         api.fetchNavigation('/'),
         api.fetchTenantConfig(secret.config.tenantIdentifier),
         fetchTranslations(storage, memoryStorage, requestContext.language),
         api.fetchFooter('/footer'),
     ]);
-
     const apiPath = buildLanguageMarketAwareLink('/api', requestContext.language, requestContext.market);
     const frontConfiguration = buildStoreFrontConfiguration(
         requestContext.locale,
-        `http${requestContext.isSecure ? 's' : ''}://${requestContext.baseUrl}${apiPath}`,
+        `${requestContext.baseUrl}${apiPath}`,
         shared.config,
         tenantConfig,
     );

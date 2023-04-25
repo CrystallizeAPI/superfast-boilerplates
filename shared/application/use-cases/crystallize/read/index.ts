@@ -34,6 +34,7 @@ export const CrystallizeAPI = ({
 }: CrystallizeAPIContext) => {
     const version = isPreview ? 'draft' : 'published';
     const mapper = DataMapper({ language, locale });
+
     return {
         fetchTenantConfig: (tenantIdentifier: string) => fetchTenantConfig(apiClient, tenantIdentifier),
         fetchNavigation: (path: string) =>

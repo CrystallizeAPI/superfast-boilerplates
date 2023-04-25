@@ -12,7 +12,7 @@ export function useAuth() {
     useEffect(() => {
         // Note that we are on the frontend here, and this token is just here to hold some non sensitive data.
         // Service API has a Cookie (http only and Safe only) that is used to hold a really token.
-        if (searchParams.has('token')) {
+        if (searchParams?.has('token')) {
             const urlToken = searchParams.get('token') as string;
             searchParams.delete('token');
             try {
@@ -42,7 +42,7 @@ export function useAuth() {
                 lastname: decoded.lastname,
             };
         }
-    } catch (exception) {}
+    } catch (exception) { }
     return {
         login: (jwt: string) => {
             writeStorage('jwt', jwt);

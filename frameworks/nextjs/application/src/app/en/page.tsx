@@ -9,7 +9,7 @@ import { LandingPage as TLandingPage } from '~/use-cases/contracts/LandingPage';
 
 async function getData() {
     const requestContext = getContext({
-        url: 'https://furniture.superpast.local/en',
+        url: 'https://furniture.superfast.local/en',
         headers: headers(),
     });
     if (!isValidLanguageMarket(requestContext.language, requestContext.market)) {
@@ -21,6 +21,7 @@ async function getData() {
         language: requestContext.language,
     });
     const map = await api.fetchTreeMap();
+
     const mappedKey = Object.keys(map).find((key: string) => key === '/frontpage');
     const shapeIdentifier = map[mappedKey as keyof typeof map]?.shape?.identifier || '_topic';
     const data = await dataFetcherForShapePage(shapeIdentifier, '/frontpage', requestContext, {});

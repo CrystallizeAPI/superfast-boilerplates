@@ -10,6 +10,7 @@ import { DataMapper } from '..';
 export default (data: any): Shop => {
     const mapper = DataMapper();
     const [folder, hierarchy] = data;
+
     const hero = choiceComponentWithId(folder.components, 'hero-content');
     const grid =
         hero?.content?.grids?.[0] ||
@@ -23,9 +24,9 @@ export default (data: any): Shop => {
         description: stringForRichTextComponentWithId(folder.components, 'description') || data.name!,
         hero: grid
             ? {
-                  id: `grid-${hero?.id ?? folder.id}`,
-                  ...grid,
-              }
+                id: `grid-${hero?.id ?? folder.id}`,
+                ...grid,
+            }
             : undefined,
         seo: mapper.API.Object.APIMetaSEOComponentToSEO(firstSeoChunk),
         categories: hierarchy.tree?.children.map((child: any) => {
