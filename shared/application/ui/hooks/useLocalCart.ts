@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import { LocalCart } from '~/use-cases/contracts/LocalCart';
 

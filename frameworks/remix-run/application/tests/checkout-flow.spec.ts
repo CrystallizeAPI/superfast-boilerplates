@@ -52,7 +52,7 @@ test.beforeAll(async ({ playwright }) => {
     });
 });
 
-test.afterAll(async ({ }) => {
+test.afterAll(async ({}) => {
     // Clean up order
     !!orderId && (await apiContext.post('/graphql', { data: getRequestBody(deleteOrderMutation, orderId) }));
     // Dispose all responses

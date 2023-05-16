@@ -40,4 +40,3 @@ export async function GET(request: Request, params: { id: string }) {
         statusText: 'Order Not Found',
     });
 }
-

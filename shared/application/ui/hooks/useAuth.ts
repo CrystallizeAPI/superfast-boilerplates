@@ -42,7 +42,7 @@ export function useAuth() {
                 lastname: decoded.lastname,
             };
         }
-    } catch (exception) { }
+    } catch (exception) {}
     return {
         login: (jwt: string) => {
             writeStorage('jwt', jwt);

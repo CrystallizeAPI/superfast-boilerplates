@@ -16,4 +16,4 @@ export async function POST(request: Request, params: { provider: string }) {
         storefront.config,
     );
     return NextResponse.json(data);
-};
+}

@@ -70,28 +70,28 @@ export default (
         dimensions: !firstDimensionsChunk
             ? []
             : firstDimensionsChunk.reduce(
-                (
-                    memo: Record<
-                        string,
-                        {
-                            title: string;
-                            value: number;
-                            unit: string;
-                        }
-                    >,
-                    data: any,
-                ) => {
-                    return {
-                        ...memo,
-                        [data.id]: {
-                            title: data.name,
-                            value: data?.content?.number || 0.0,
-                            unit: data?.content?.unit || '',
-                        },
-                    };
-                },
-                {},
-            ),
+                  (
+                      memo: Record<
+                          string,
+                          {
+                              title: string;
+                              value: number;
+                              unit: string;
+                          }
+                      >,
+                      data: any,
+                  ) => {
+                      return {
+                          ...memo,
+                          [data.id]: {
+                              title: data.name,
+                              value: data?.content?.number || 0.0,
+                              unit: data?.content?.unit || '',
+                          },
+                      };
+                  },
+                  {},
+              ),
         downloads:
             downloads?.map((chunk) => {
                 const mapped = chunk.reduce((memo: Record<string, any>, data: any) => {

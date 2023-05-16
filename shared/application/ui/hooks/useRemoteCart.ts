@@ -1,4 +1,4 @@
-'use client'
+'use client';
 
 import { useLocalCart } from '../hooks/useLocalCart';
 import { useEffect, useState } from 'react';
@@ -23,9 +23,9 @@ export function useRemoteCart() {
                 language: appContextState.language,
                 serviceApiUrl: appContextState.serviceApiUrl,
             });
-            console.log(appContextState.serviceApiUrl)
+            console.log(appContextState.serviceApiUrl);
             const cartWrapper = await api.fetchRemoteCart(cart);
-            console.log('cartWrapper', cartWrapper)
+            console.log('cartWrapper', cartWrapper);
             if (cart.cartId !== cartWrapper.cartId || cart.state !== cartWrapper.state) {
                 setWrappingData(cartWrapper.cartId, cartWrapper.state);
             }

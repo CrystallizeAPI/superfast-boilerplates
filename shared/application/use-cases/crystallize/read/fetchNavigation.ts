@@ -6,7 +6,6 @@ export default async (apiClient: ClientInterface, path: string, language: string
         createNavigationFetcher(apiClient).byTopics(path, language, 2),
     ]);
 
-
     return {
         folders,
         topics,

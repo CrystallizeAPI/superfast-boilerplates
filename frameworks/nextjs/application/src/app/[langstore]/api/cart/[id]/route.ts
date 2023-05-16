@@ -1,5 +1,5 @@
-import { NextResponse } from "next/server";
-import { cartWrapperRepository } from "~/use-cases/services.server";
+import { NextResponse } from 'next/server';
+import { cartWrapperRepository } from '~/use-cases/services.server';
 
 export async function GET(request: Request, params: { id: string }) {
     //@ts-expect-error
