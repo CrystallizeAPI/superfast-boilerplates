@@ -6,8 +6,8 @@ import { useAppContext } from '../../app-context/provider';
 export const AttributeFilter: React.FC<{ attributes: any }> = ({ attributes }) => {
     const [show, setShow] = useState(false);
     const { _t } = useAppContext();
-    const [searchParams] = useSearchParams();
-    const selectedAttributes = searchParams.getAll('attr');
+    const searchParams = useSearchParams();
+    const selectedAttributes = searchParams?.getAll('attr');
     return (
         <>
             {Object.keys(attributes).length > 0 && (

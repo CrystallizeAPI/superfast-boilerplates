@@ -1,10 +1,10 @@
 import { headers } from 'next/headers';
-import Category from '~/ui/pages/Category';
 import { isValidLanguageMarket } from '~/use-cases/LanguageAndMarket';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
-import { Category as TCategory } from '~/use-cases/contracts/Category';
+import ShopPage from '~/ui/pages/Shop';
+import 'rc-slider/assets/index.css';
 
 async function getData() {
     const requestContext = getContext({
@@ -28,8 +28,5 @@ async function getData() {
 
 export default async () => {
     const data = await getData();
-
-    console.log('data', data);
-
-    return <p>Hello</p>;
+    return <ShopPage shop={data} />;
 };

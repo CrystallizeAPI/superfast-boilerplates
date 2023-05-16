@@ -1,8 +1,11 @@
-// import { Splide, SplideSlide } from "@splidejs/react-splide";
+'use client';
+
+import { Splide, SplideSlide } from '@splidejs/react-splide';
 import { TileViewComponentProps } from '../../../lib/grid-tile/types';
 import { ProductFromCell } from '../../item/product';
 import { DocumentFromCell } from '../../item/document';
 import { LinkRenderer } from '../../../lib/grid-tile/linkRenderer';
+import '@splidejs/splide/dist/css/themes/splide-default.min.css';
 
 const itemMapping = {
     product: ProductFromCell,
@@ -38,40 +41,36 @@ export const Slider: React.FC<TileViewComponentProps> = ({ tile, options }) => {
             </div>
 
             <div className={setInnerPadding()}>
-                {/* <Splide
-          options={{
-            rewind: true,
-            perPage: spansOverAllColumns ? 5 : 2,
-            breakpoints: {
-              1200: {
-                perPage: 4,
-              },
-              940: {
-                perPage: 3,
-              },
-              480: {
-                perPage: 2,
-              },
-            },
-            pagination: false,
-            gap: 10,
-          }}
-          className="splide "
-        >
-          {content.items &&
-            content.items.map((item: any) => {
-              const Component =
-                itemMapping[item.type as keyof typeof itemMapping];
-              return (
-                <SplideSlide
-                  key={item.name}
-                  className="slide items-stretch pb-10"
+                <Splide
+                    options={{
+                        rewind: true,
+                        perPage: spansOverAllColumns ? 5 : 2,
+                        breakpoints: {
+                            1200: {
+                                perPage: 4,
+                            },
+                            940: {
+                                perPage: 3,
+                            },
+                            480: {
+                                perPage: 2,
+                            },
+                        },
+                        pagination: false,
+                        gap: 10,
+                    }}
+                    className="splide "
                 >
-                  <Component item={item} />
-                </SplideSlide>
-              );
-            })}
-        </Splide> */}
+                    {content.items &&
+                        content.items.map((item: any) => {
+                            const Component = itemMapping[item.type as keyof typeof itemMapping];
+                            return (
+                                <SplideSlide key={item.name} className="slide items-stretch pb-10">
+                                    <Component item={item} />
+                                </SplideSlide>
+                            );
+                        })}
+                </Splide>
             </div>
         </div>
     );

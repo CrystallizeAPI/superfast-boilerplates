@@ -61,6 +61,7 @@ export const RazorPay: React.FC = () => {
                     razorpayPaymentId: response.razorpay_payment_id,
                     razorpayOrderId: response.razorpay_order_id,
                     razorpaySignature: response.razorpay_signature,
+                    cartId: cart.cartId,
                 };
                 const result = await ServiceAPI({
                     language: state.language,
@@ -69,7 +70,8 @@ export const RazorPay: React.FC = () => {
 
                 if (result.id) {
                     empty();
-                    navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
+                    window.location.replace(path(`/order/cart/${cart.cartId}`));
+                    //navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
                 }
             },
             prefill: {

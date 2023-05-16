@@ -69,8 +69,8 @@ export const CrystallizeAPI = ({
             fetchVoucher(apiClient, language, version, code).then(mapper.API.Call.fetchVoucherToVoucher),
         fetchPriceRangeAndAttributes: (path: string) => fetchPriceRangeAndAttributes(apiClient, path),
         search: (value: string) => search(apiClient, value, language).then(mapper.API.Call.searchProductToProductSlim),
-        searchOrderBy: (path: string, orderBy?: any, fitlers?: any, attributes?: any) =>
-            searchOrderBy(apiClient, path, language, orderBy, fitlers, attributes).then(
+        searchOrderBy: (path: string, orderBy?: any, filters?: any, attributes?: any) =>
+            searchOrderBy(apiClient, path, language, orderBy, filters, attributes).then(
                 mapper.API.Call.searchProductToProductSlim,
             ),
         searchOrderByPriceRange: (path: string) =>

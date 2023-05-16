@@ -18,7 +18,7 @@ async function getData({
     };
 }) {
     const requestContext = getContext({
-        url: `https://furniture.superfast.local/en//shop/${params.folder}/${params.product}`,
+        url: `https://furniture.superfast.local/en/shop/${params.folder}/${params.product}`,
         headers: headers(),
     });
     const path = `/shop/${params.folder}/${params.product}`;

@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import { useLocalCart } from '../hooks/useLocalCart';
 import { ServiceAPI } from '~/use-cases/service-api';
@@ -10,6 +12,8 @@ export default ({ cartId }: { cartId: string }) => {
     const { state: appContextState, path, _t } = useAppContext();
     const navigate = useNavigate();
 
+    console.log('cartId', cartId);
+
     useEffect(() => {
         let timeout: ReturnType<typeof setTimeout>;
         (async () => {
@@ -21,11 +25,14 @@ export default ({ cartId }: { cartId: string }) => {
                     language: appContextState.language,
                     serviceApiUrl: appContextState.serviceApiUrl,
                 }).fetchCart(cartId);
+
                 if (cart?.extra?.orderId) {
                     if (cart?.customer?.isGuest === true) {
-                        navigate(path('/order/' + cart.extra.orderId + '?cartId=' + cart.cartId));
+                        window.location.replace(path('/order/' + cart.extra.orderId + '?cartId=' + cart.cartId));
+                        //navigate(path('/order/' + cart.extra.orderId + '?cartId=' + cart.cartId));
                     } else {
-                        navigate(path('/order/' + cart.extra.orderId));
+                        window.location.replace(path('/order/' + cart.extra.orderId));
+                        //navigate(path('/order/' + cart.extra.orderId));
                     }
                 } else {
                     timeout = setTimeout(() => {
