@@ -22,7 +22,7 @@ export const PriceRangeFilter: React.FC<{ min: number; max: number; formRef: any
     function onRangeDone(newValue: any) {
         minInput.current!.value = newValue[0];
         maxInput.current!.value = newValue[1];
-        useSubmit(formRef.current);
+        formRef.current.submit();
     }
 
     return (
