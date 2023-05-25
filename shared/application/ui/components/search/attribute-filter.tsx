@@ -3,7 +3,10 @@ import filterIcon from '~/assets/filterIcon.svg';
 import useSearchParams from '~/bridge/ui/useSearchParams';
 import { useAppContext } from '../../app-context/provider';
 
-export const AttributeFilter: React.FC<{ attributes: any }> = ({ attributes }) => {
+export const AttributeFilter: React.FC<{ attributes: any; handleChange?: Function }> = ({
+    attributes,
+    handleChange,
+}) => {
     const [show, setShow] = useState(false);
     const { _t } = useAppContext();
     const searchParams = useSearchParams();
@@ -31,6 +34,7 @@ export const AttributeFilter: React.FC<{ attributes: any }> = ({ attributes }) =
                                                 value={`${key}_${item.value}`}
                                                 name="attr"
                                                 defaultChecked={selectedAttributes.includes(`${key}_${item.value}`)}
+                                                onChange={(e) => handleChange && handleChange(e)}
                                             />
                                             <label htmlFor={item.value}>{item.value}</label>
                                         </div>

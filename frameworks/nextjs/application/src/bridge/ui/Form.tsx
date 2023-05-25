@@ -1,33 +1,43 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { use, useEffect, useRef, useState } from 'react';
 import useNavigate from './useNavigate';
 import { useAppContext } from '~/ui/app-context/provider';
 import { PriceRangeFilter } from '~/ui/components/search/price-range-filter';
 import { AttributeFilter } from '~/ui/components/search/attribute-filter';
 import useLocation from './useLocation';
 import useSearchParams from './useSearchParams';
+import { useRouter } from 'next/navigation';
 
 export default ({ aggregations }: { aggregations: any }) => {
-    const { router, pathname } = useNavigate();
-    // const searchParams = useSearchParams();
+    const { pathname } = useNavigate();
     const location = useLocation();
-    let searchParams: any;
+    const [searchTerm, setSearchTerm] = useState('');
+    //price range will be changed to accomodate min and max
+    const [priceRange, setPriceRange] = useState('');
+    const [attr, setAttr] = useState('');
+    const Router = useRouter();
 
-    const handleChange = (event: any) => {
-        event.preventDefault();
-        console.log('event', event.target.value);
-        searchParams = new URLSearchParams();
-        console.log('searchParams', event.target.name);
+    const handleChange = (e: any) => {
+        const { name, value } = e.target;
+        if (name === 'orderBy') {
+            setSearchTerm(value);
+        } else if (name === 'filter1') {
+            setPriceRange(value);
+        } else if (name === 'attr') {
+            setAttr(value);
+        }
 
-        searchParams.append(event.target.name, event.target.value);
-        const search = searchParams.toString();
-        const currentUrl = window.location.href;
-        const newUrl = searchParams ? `${currentUrl}&${search}` : `${currentUrl}?${search}`;
-        window.location.replace(newUrl);
+        console.log('jello', searchTerm, priceRange, attr);
+
+        const queryParams = new URLSearchParams();
+        if (searchTerm) queryParams.set('orderBy', searchTerm);
+        if (priceRange) queryParams.set('filter1', priceRange);
+        if (attr) queryParams.set('attr', attr);
+        const queryString = queryParams.toString();
+        const pathname = window.location.pathname;
+        Router.push(`${pathname}?${queryString}`);
     };
-
-    useEffect(() => {}, [window.location.search]);
 
     const formRef = useRef(null);
     const { _t } = useAppContext();
@@ -47,22 +57,15 @@ export default ({ aggregations }: { aggregations: any }) => {
         {},
     );
 
-    console.log(window.location);
-
     return (
         <>
-            <form
-                method="get"
-                action={window.location.pathname}
-                onChange={handleChange}
-                ref={formRef}
-                className="flex gap-4 flex-wrap"
-            >
+            <form method="get" action={window.location.pathname} ref={formRef} className="flex gap-4 flex-wrap">
                 <label>
                     <select
                         name="orderBy"
                         className="w-60 bg-grey py-2 px-6 rounded-md text-md font-bold "
                         defaultValue={'NAME_ASC'}
+                        onChange={(e) => handleChange(e)}
                     >
                         <option disabled value="" className="text-textBlack">
                             {_t('search.sort')}
@@ -76,7 +79,7 @@ export default ({ aggregations }: { aggregations: any }) => {
                     </select>
                 </label>
                 <PriceRangeFilter min={price.min} max={price.max} formRef={formRef} />
-                <AttributeFilter attributes={grouped} />
+                <AttributeFilter attributes={grouped} handleChange={handleChange} />
             </form>
             {/* {transition.state === 'submitting' ? (
                 <p>{_t('loading')}...</p>
