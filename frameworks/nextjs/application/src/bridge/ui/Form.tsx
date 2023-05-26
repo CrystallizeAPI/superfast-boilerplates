@@ -10,30 +10,15 @@ import useSearchParams from './useSearchParams';
 import { useRouter } from 'next/navigation';
 
 export default ({ aggregations }: { aggregations: any }) => {
-    const { pathname } = useNavigate();
-    const location = useLocation();
-    const [searchTerm, setSearchTerm] = useState('');
-    //price range will be changed to accomodate min and max
-    const [priceRange, setPriceRange] = useState('');
-    const [attr, setAttr] = useState('');
     const Router = useRouter();
 
     const handleChange = (e: any) => {
+        e.preventDefault();
         const { name, value } = e.target;
-        if (name === 'orderBy') {
-            setSearchTerm(value);
-        } else if (name === 'filter1') {
-            setPriceRange(value);
-        } else if (name === 'attr') {
-            setAttr(value);
-        }
-
-        console.log('jello', searchTerm, priceRange, attr);
 
         const queryParams = new URLSearchParams();
-        if (searchTerm) queryParams.set('orderBy', searchTerm);
-        if (priceRange) queryParams.set('filter1', priceRange);
-        if (attr) queryParams.set('attr', attr);
+        if (name === 'orderBy') queryParams.set('orderBy', value);
+        if (name === 'attr') queryParams.set('attr', value);
         const queryString = queryParams.toString();
         const pathname = window.location.pathname;
         Router.push(`${pathname}?${queryString}`);
