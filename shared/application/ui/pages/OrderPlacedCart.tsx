@@ -12,8 +12,6 @@ export default ({ cartId }: { cartId: string }) => {
     const { state: appContextState, path, _t } = useAppContext();
     const navigate = useNavigate();
 
-    console.log('cartId', cartId);
-
     useEffect(() => {
         let timeout: ReturnType<typeof setTimeout>;
         (async () => {
@@ -25,6 +23,8 @@ export default ({ cartId }: { cartId: string }) => {
                     language: appContextState.language,
                     serviceApiUrl: appContextState.serviceApiUrl,
                 }).fetchCart(cartId);
+
+                console.log('cart', cart);
 
                 if (cart?.extra?.orderId) {
                     if (cart?.customer?.isGuest === true) {

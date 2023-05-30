@@ -36,8 +36,6 @@ async function getData({ params }: { params: { page: string[] } }) {
         language: requestContext.language,
     });
 
-    console.log('params', params);
-
     const path = '/' + params.page.join('/');
     const crystallizePath = path.replace('.pdf', '');
 

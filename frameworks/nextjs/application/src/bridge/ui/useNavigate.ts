@@ -13,8 +13,3 @@ export default (path?: string, replace?: boolean) => {
     };
     return useNavigate();
 };
-
-// export default (path?: string, options?: boolean) => {
-//     const router = useRouter();
-//     return router.push(path!)
-// }

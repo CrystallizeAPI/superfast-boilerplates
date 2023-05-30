@@ -9,7 +9,7 @@ export const AttributeFilter: React.FC<{ attributes: any; handleChange?: Functio
 }) => {
     const [show, setShow] = useState(false);
     const { _t } = useAppContext();
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
     const selectedAttributes = searchParams?.getAll('attr');
     return (
         <>

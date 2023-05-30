@@ -4,7 +4,7 @@ import receivePaymentEvent from '~/use-cases/payments/stripe/receivePaymentEvent
 import { cartWrapperRepository } from '~/use-cases/services.server';
 import { NextResponse } from 'next/server';
 
-export async function POST(request: Request, params: { provider: string }) {
+export async function POST(request: Request) {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const body = await request.json();

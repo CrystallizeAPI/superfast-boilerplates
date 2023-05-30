@@ -4,17 +4,16 @@ import { CrystallizeAPI } from '~/use-cases/crystallize/read';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import ShopPage from '~/ui/pages/Shop';
-import 'rc-slider/assets/index.css';
 
-async function getData() {
+async function getData({ params }: { params: { shop: string; langstore: string } }) {
     const requestContext = getContext({
-        url: 'https://furniture.superfast.local/en',
+        url: `https://furniture.superfast.local/${params.langstore}/shop`,
         headers: headers(),
     });
     if (!isValidLanguageMarket(requestContext.language, requestContext.market)) {
         // HOW?
     }
-    const path = '/shop';
+    const path = `/shop`;
     const { secret } = await getStoreFront(requestContext.host);
     const api = CrystallizeAPI({
         apiClient: secret.apiClient,
@@ -26,7 +25,7 @@ async function getData() {
     return data;
 }
 
-export default async () => {
-    const data = await getData();
+export default async ({ params }: { params: { shop: string; langstore: string } }) => {
+    const data = await getData({ params });
     return <ShopPage shop={data} />;
 };

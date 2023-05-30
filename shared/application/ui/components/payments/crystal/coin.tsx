@@ -31,7 +31,7 @@ export const CrystalCoin: React.FC = () => {
     const [paying, setPaying] = useState(false);
     const { state, path } = useAppContext();
     const [customer] = useLocalStorage<Partial<Customer>>('customer', {});
-    const navigate = useNavigate();
+
     if (isEmpty()) {
         return null;
     }
@@ -45,7 +45,7 @@ export const CrystalCoin: React.FC = () => {
                     serviceApiUrl: state.serviceApiUrl,
                 }).sendPaidOrderWithCrystalCoin(cart, customer);
                 empty();
-                navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
+                window.location.replace(path(`/order/cart/${cart.cartId}`));
             }}
         />
     );

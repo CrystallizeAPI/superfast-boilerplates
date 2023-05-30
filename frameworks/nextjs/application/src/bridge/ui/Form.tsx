@@ -1,30 +1,24 @@
 'use client';
 
-import { use, useEffect, useRef, useState } from 'react';
-import useNavigate from './useNavigate';
+import { use, useRef } from 'react';
 import { useAppContext } from '~/ui/app-context/provider';
 import { PriceRangeFilter } from '~/ui/components/search/price-range-filter';
 import { AttributeFilter } from '~/ui/components/search/attribute-filter';
-import useLocation from './useLocation';
-import useSearchParams from './useSearchParams';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
+import useNavigate from './useNavigate';
 
 export default ({ aggregations }: { aggregations: any }) => {
-    const Router = useRouter();
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const formRef = useRef<HTMLFormElement>(null);
+    const location = useNavigate();
 
     const handleChange = (e: any) => {
-        e.preventDefault();
-        const { name, value } = e.target;
-
-        const queryParams = new URLSearchParams();
-        if (name === 'orderBy') queryParams.set('orderBy', value);
-        if (name === 'attr') queryParams.set('attr', value);
-        const queryString = queryParams.toString();
-        const pathname = window.location.pathname;
-        Router.push(`${pathname}?${queryString}`);
+        if (formRef.current) {
+            formRef.current.submit();
+        }
     };
 
-    const formRef = useRef(null);
     const { _t } = useAppContext();
     const price = aggregations?.search.aggregations.price;
     const attributes = aggregations?.search.aggregations.attributes;
@@ -44,13 +38,13 @@ export default ({ aggregations }: { aggregations: any }) => {
 
     return (
         <>
-            <form method="get" action={window.location.pathname} ref={formRef} className="flex gap-4 flex-wrap">
+            <form method="get" action={location.pathname} ref={formRef} className="flex gap-4 flex-wrap">
                 <label>
                     <select
                         name="orderBy"
-                        className="w-60 bg-grey py-2 px-6 rounded-md text-md font-bold "
-                        defaultValue={'NAME_ASC'}
+                        className="w-60 bg-grey py-2 px-6 rounded-md text-md font-bold"
                         onChange={(e) => handleChange(e)}
+                        value={searchParams?.get('orderBy') || 'NAME_ASC'}
                     >
                         <option disabled value="" className="text-textBlack">
                             {_t('search.sort')}
@@ -66,11 +60,7 @@ export default ({ aggregations }: { aggregations: any }) => {
                 <PriceRangeFilter min={price.min} max={price.max} formRef={formRef} />
                 <AttributeFilter attributes={grouped} handleChange={handleChange} />
             </form>
-            {/* {transition.state === 'submitting' ? (
-                <p>{_t('loading')}...</p>
-            ) : (
-                <button onClick={() => navigate(location.pathname)}>{_t('search.removeAllFilters')}</button>
-            )} */}
+            <button onClick={() => router.push(location.pathname)}>{_t('search.removeAllFilters')}</button>
         </>
     );
 };

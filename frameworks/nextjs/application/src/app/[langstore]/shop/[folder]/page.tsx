@@ -2,11 +2,11 @@ import { headers } from 'next/headers';
 import { isValidLanguageMarket } from '~/use-cases/LanguageAndMarket';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
-import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import Category from '~/ui/pages/Category';
 import { Category as TCategory } from '~/use-cases/contracts/Category';
 import { ProductSlim } from '~/use-cases/contracts/Product';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
+import 'rc-slider/assets/index.css';
 
 type Data = {
     category: TCategory;
@@ -22,11 +22,7 @@ async function getData({
         [x: string]: any;
         slug: string;
     };
-    searchParams: {
-        orderBy: string;
-        filters: string;
-        attributes: string;
-    };
+    searchParams?: any;
 }) {
     const requestContext = getContext({
         url: `https://furniture.superfast.local/en/shop/${params.folder}`,
@@ -42,6 +38,19 @@ async function getData({
 
     //const user = await authenticatedUser(request);
 
+    let attributes = Array.isArray(searchParams?.attr) ? searchParams?.attr : [searchParams?.attr];
+
+    const queryParams = {
+        orderBy: searchParams?.orderBy,
+        filters: {
+            price: {
+                min: searchParams?.min,
+                max: searchParams?.max,
+            },
+        },
+        attributes: attributes.filter(Boolean),
+    };
+
     const user: [] = [];
 
     const api = CrystallizeAPI({
@@ -51,10 +60,10 @@ async function getData({
 
     const [category, products, priceRangeAndAttributes] = await Promise.all([
         api.fetchFolderWithChildren(path, []),
-        api.searchOrderBy(path, searchParams?.orderBy, searchParams?.filters, searchParams?.attributes),
+        api.searchOrderBy(path, queryParams?.orderBy, queryParams?.filters, queryParams?.attributes),
         api.fetchPriceRangeAndAttributes(path),
     ]);
-    console.log('category', category);
+
     return {
         category,
         products,
@@ -62,8 +71,7 @@ async function getData({
     };
 }
 
-export default async function Page({ params, searchParams }: { params: { slug: string }; searchParams: any }) {
-    console.log('serchyiio', searchParams);
+export default async function Page({ params, searchParams }: { params: { slug: string }; searchParams?: any }) {
     const data = await getData({ params, searchParams });
     return <Category data={data as Data} />;
 }

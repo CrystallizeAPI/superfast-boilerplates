@@ -5,7 +5,7 @@ import { getStoreFront } from '~/use-cases/storefront.server';
 
 async function getData({ params, searchParams }: { params: { id: string }; searchParams: { cartId: string } }) {
     const requestContext = getContext({
-        url: `https://furniture.superfast.local/en/search`,
+        url: `https://furniture.superfast.local/en/order/cart/${params.id}`,
         headers: headers(),
     });
     const { shared } = await getStoreFront(requestContext.host);

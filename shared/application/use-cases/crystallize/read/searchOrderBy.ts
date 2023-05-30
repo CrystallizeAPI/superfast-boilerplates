@@ -91,8 +91,7 @@ export default async (
             direction,
             min: priceRangeParams?.min ? parseFloat(priceRangeParams.min) : 0.0,
             max: priceRangeParams?.max ? parseFloat(priceRangeParams.max) : 0.0,
-            // attributes: Object?.values(attributeFilters) as [],
-            attributes: [],
+            attributes: Object?.values(attributeFilters) as [],
         },
     );
 
