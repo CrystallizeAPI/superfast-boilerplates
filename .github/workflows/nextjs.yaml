@@ -1,4 +1,4 @@
-name: Remix Run
+name: Next JS
 
 on:
     push:
@@ -35,12 +35,12 @@ jobs:
             - uses: microsoft/playwright-github-action@v1
 
             - name: 📥 Download deps
-              run: cd frameworks/remix-run && make install
+              run: cd frameworks/nextjs && make install
 
             - name: 🏄 Run the tests
               run: |
-                  ln -sf frameworks/remix-run/application/node_modules ./node_modules
-                  cd frameworks/remix-run && make tests
+                  ln -sf frameworks/nextjs/application/node_modules ./node_modules
+                  cd frameworks/nextjs && make tests
               timeout-minutes: 30
               env:
                   PLAYWRIGHT_ACCESS_TOKEN_ID: '${{ secrets.CRYSTALLIZE_ACCESS_TOKEN_ID }}'
@@ -69,7 +69,7 @@ jobs:
             - name: 🔑 Setup the SSH key
               uses: webfactory/ssh-agent@v0.6.0
               with:
-                  ssh-private-key: ${{ secrets.FURNITURE_REMIX_REPO_DEPLOY_PRIVATE_KEY }}
+                  ssh-private-key: ${{ secrets.FURNITURE_NEXTJS_REPO_DEPLOY_PRIVATE_KEY }}
 
             - name: 🚀 Sync it!
-              run: bash tools/releaser/remix-run.bash
+              run: bash tools/releaser/nextjs.bash

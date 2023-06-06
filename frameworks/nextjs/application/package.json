@@ -12,7 +12,8 @@
         "build:css:dark": "tailwindcss -c src/styles/tailwind/dark.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.dark.css",
         "build:css:rainbow": "tailwindcss -c src/styles/tailwind/dark.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.rainbow.css",
         "start": "next start",
-        "lint": "next lint"
+        "lint": "next lint",
+        "test": "echo TODO"
     },
     "dependencies": {
         "@adyen/adyen-web": "^5.36.0",
