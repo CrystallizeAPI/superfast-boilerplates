@@ -46,13 +46,13 @@ test.beforeAll(async ({ playwright }) => {
         baseURL: process.env.API_URL,
         extraHTTPHeaders: {
             'Content-Type': 'application/json',
-            'X-Crystallize-Access-Token-Id': process.env.CRYSTALLIZE_ACCESS_TOKEN_ID ?? '',
-            'X-Crystallize-Access-Token-Secret': process.env.CRYSTALLIZE_ACCESS_TOKEN_SECRET ?? '',
+            'X-Crystallize-Access-Token-Id': process.env.PLAYWRIGHT_ACCESS_TOKEN_ID ?? '',
+            'X-Crystallize-Access-Token-Secret': process.env.PLAYWRIGHT_ACCESS_TOKEN_SECRET ?? '',
         },
     });
 });
 
-test.afterAll(async ({}) => {
+test.afterAll(async ({ }) => {
     // Clean up order
     !!orderId && (await apiContext.post('/graphql', { data: getRequestBody(deleteOrderMutation, orderId) }));
     // Dispose all responses
@@ -77,7 +77,7 @@ test.describe('Checkout flow', () => {
         await page.goto(baseURL ?? '');
 
         // Navigate to the first product on the home page
-        await page.getByTestId('product-link').click();
+        await page.getByTestId('product-link').first().click();
 
         // Add the product to the cart and navigate to the cart
         await page.getByTestId('add-to-cart-button').click();

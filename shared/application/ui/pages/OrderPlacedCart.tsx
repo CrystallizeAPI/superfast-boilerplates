@@ -24,8 +24,6 @@ export default ({ cartId }: { cartId: string }) => {
                     serviceApiUrl: appContextState.serviceApiUrl,
                 }).fetchCart(cartId);
 
-                console.log('cart', cart);
-
                 if (cart?.extra?.orderId) {
                     if (cart?.customer?.isGuest === true) {
                         navigate(path('/order/' + cart.extra.orderId + '?cartId=' + cart.cartId));

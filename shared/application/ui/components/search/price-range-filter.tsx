@@ -3,7 +3,6 @@ import { useRef, useState } from 'react';
 import Slider from 'rc-slider';
 import { useAppContext } from '../../app-context/provider';
 import { Price } from '../../lib/pricing/pricing-component';
-import useSubmit from '~/bridge/ui/useSubmit';
 
 export const PriceRangeFilter: React.FC<{ min: number; max: number; formRef: any | null }> = ({
     min,
