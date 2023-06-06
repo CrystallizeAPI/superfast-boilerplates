@@ -1,7 +1,6 @@
-import { getEventListeners } from "events";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 
-const CrystallizeCarousel = (props) => {
+const CrystallizeCarousel = (props: any) => {
   const { options } = props;
 
   const [slideWidth, setSlideWidth] = useState(0);
@@ -16,27 +15,30 @@ const CrystallizeCarousel = (props) => {
   // Calculate the width of child elements based on perPage elements number
   useEffect(() => {
     setSlideWidth(
-      (wrapperRef.current.clientWidth + 10) / (options?.perPage || 5)
+      (wrapperRef.current.clientWidth + 10) / (options?.perPage || 2)
     );
   }, [slideWidth]);
 
+  console.log(currentIndex);
   // Move wrapper on next previous button
   useEffect(() => {
     const a = document.getElementById("crs-slider-wrapper__inner");
-    a.style.transition = "0.5s transform ease-in-out";
+    a!.style.transition = "0.5s transform ease-in-out";
     setDragTranslate(-((slideWidth || 0) * currentIndex));
     setCurrentTranslation(-((slideWidth || 0) * currentIndex));
   }, [currentIndex]);
 
   const goToNextSlide = () => {
+    if (currentIndex + options.perPage >= props.children.length) return;
     setCurrentIndex(currentIndex + options.perPage);
   };
 
   const goToPreviousSlide = () => {
+    if (currentIndex - options.perPage < 0) return;
     setCurrentIndex(currentIndex - options.perPage);
   };
 
-  const preventDefault = useCallback((e) => e.preventDefault(), []);
+  const preventDefault = useCallback((e: any) => e.preventDefault(), []);
 
   // Reference the element on which Dragging was inititated in order to remove preventDefault listener correctly
   const clickedElement = useRef<any>();
@@ -45,7 +47,7 @@ const CrystallizeCarousel = (props) => {
     const gap = dragTranslate / slideWidth;
     const rem = dragTranslate % slideWidth;
     const a = document.getElementById("crs-slider-wrapper__inner");
-    a.style.transition = "0.5s transform ease-in-out";
+    a!.style.transition = "0.5s transform ease-in-out";
     if (rem < slideWidth / 2) {
       setDragTranslate(Math.floor(gap) * slideWidth);
       setCurrentTranslation(Math.floor(gap) * slideWidth);
@@ -57,13 +59,27 @@ const CrystallizeCarousel = (props) => {
 
   return (
     <div className="relative">
-      <div
-        className="absolute left-[-20px] top-1/2 -translate-y-1/2 z-50 p-2 bg-[red] cursor-pointer"
+      <button
+        type="button"
+        className="absolute left-[-20px] top-[35%] z-50 p-2 cursor-pointer bg-white border border-black rounded-full scale-x-[-1] hover:scale-x-[-1] hover:bg-black hover:text-white"
         onClick={goToPreviousSlide}
+        style={{ display: currentIndex === 0 ? "none" : "block" }}
       >
-        Previous
-      </div>
-      <div className="relative overflow-hidden">
+        <svg
+          aria-hidden="true"
+          className="w-5 h-5"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
+      <div className="relative w-full overflow-hidden">
         <ul
           id="crs-slider-wrapper"
           ref={wrapperRef}
@@ -85,14 +101,14 @@ const CrystallizeCarousel = (props) => {
             clickedElement.current = e.target;
             setStartDrag(e.clientX);
             const a = document.getElementById("crs-slider-wrapper__inner");
-            a.style.transition = "0s transform ease-in-out";
+            a!.style.transition = "0s transform ease-in-out";
           }}
           onMouseMove={(e) => {
             if (isMouseDown) {
               const currentDrag = e.clientX;
               const dragDelta = currentDrag - startDrag;
 
-              //@todo calculate boundaries beginning and end and condition this functoin
+              //@todo calculate boundaries beginning and end and condition this function
               setDragTranslate(currentTranslation + dragDelta);
               if (clickedElement.current) {
                 clickedElement.current.addEventListener(
@@ -136,12 +152,32 @@ const CrystallizeCarousel = (props) => {
           </div>
         </ul>
       </div>
-      <div
-        className="absolute right-[-20px] top-1/2 -translate-y-1/2 z-50 p-2 bg-[red] cursor-pointer"
+      <button
+        type="button"
+        className="absolute right-[-20px] top-[35%]  z-50 p-2  cursor-pointer bg-white border border-black rounded-full hover:bg-black hover:text-white"
         onClick={goToNextSlide}
+        //dont show button if on last slide
+        style={{
+          display:
+            currentIndex + options.perPage >= props.children.length
+              ? "none"
+              : "block",
+        }}
       >
-        Next
-      </div>
+        <svg
+          aria-hidden="true"
+          className="w-5 h-5"
+          fill="currentColor"
+          viewBox="0 0 20 20"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            fill-rule="evenodd"
+            d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+            clip-rule="evenodd"
+          ></path>
+        </svg>
+      </button>
     </div>
   );
 };

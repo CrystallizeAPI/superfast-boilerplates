@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 
-const CrystallizeCarouselSlide = (props) => {
+const CrystallizeCarouselSlide = (props: any) => {
   return (
     <li
       className="shrink-0 list-none m-0 relative"
