@@ -59,7 +59,7 @@ jobs:
             - name: ⎔ Setup node
               uses: actions/setup-node@v3
               with:
-                  node-version: 16
+                  node-version: 18
 
             - name: ⬇️ Checkout repo
               uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
             - name: 🔑 Setup the SSH key
               uses: webfactory/ssh-agent@v0.6.0
               with:
-                  ssh-private-key: ${{ secrets.FURNITURE_REPO_DEPLOY_PRIVATE_KEY }}
+                  ssh-private-key: ${{ secrets.FURNITURE_REMIX_REPO_DEPLOY_PRIVATE_KEY }}
 
             - name: 🚀 Sync it!
               run: bash tools/releaser/remix-run.bash

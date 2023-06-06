@@ -1,5 +1,5 @@
+import { useRouter as useLocation } from 'next/navigation';
+
 export default () => {
-    return {
-        pathname: '/en',
-    };
+    return useLocation();
 };

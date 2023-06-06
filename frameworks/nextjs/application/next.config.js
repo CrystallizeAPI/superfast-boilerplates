@@ -1,4 +1,6 @@
 /** @type {import('next').NextConfig} */
+const withImages = require('next-images');
+
 const nextConfig = {
     webpack: (config) => {
         config.resolve.symlinks = false;
@@ -11,3 +13,4 @@ const nextConfig = {
 };
 
 module.exports = nextConfig;
+module.exports = withImages(nextConfig);

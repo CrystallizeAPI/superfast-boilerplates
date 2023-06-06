@@ -17,10 +17,11 @@ All contributions will happen here:
 | Boilerplates                                                   | Licence(s) |
 | -------------------------------------------------------------- | ---------- |
 | [Remix Run](https://github.com/CrystallizeAPI/furniture-remix) | ![MIT]     |
+| [NextJS](https://github.com/CrystallizeAPI/furniture-nextjs)   | ![MIT]     |
 
 ## Requirements
 
--   Node 16+
+-   Node 18+
 -   `rsync`
 -   `make`
 -   Caddy Server v2
