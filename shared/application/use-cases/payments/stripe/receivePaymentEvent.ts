@@ -22,7 +22,6 @@ export default async (
         signature,
         rawBody: payload,
         handleEvent: async (eventName: string, event: any) => {
-            console.log('stripe event', eventName, event);
             const cartId = event.data.object.metadata.cartId;
             const cartWrapper = await cartWrapperRepository.find(cartId);
             if (!cartWrapper) {
