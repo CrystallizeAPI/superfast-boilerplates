@@ -6,7 +6,6 @@ import { CategoryList } from '../components/category-list';
 import { Grid } from '../components/grid/grid';
 import { ContentTransformer } from '@crystallize/reactjs-components';
 import Link from '~/bridge/ui/Link';
-import '@splidejs/react-splide/css';
 
 export default ({ shop }: { shop: Shop }) => {
     const { path, _t } = useAppContext();
