@@ -47,7 +47,7 @@ export const CrystalCard: React.FC = () => {
                     serviceApiUrl: state.serviceApiUrl,
                 }).sendPaidOrderWithCrystalCard(cart, customer, Object.fromEntries(cardInfo.entries()));
                 empty();
-                window.location.replace(path(`/order/cart/${cart.cartId}`));
+                navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
             }}
         >
             <div className="grid grid-cols-3 gap-3">

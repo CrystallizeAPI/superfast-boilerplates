@@ -1,15 +1,8 @@
-import { useRouter, usePathname } from 'next/navigation';
+import { useRouter } from 'next/navigation';
 
-export default (path?: string, replace?: boolean) => {
+export default () => {
     const router = useRouter();
-    let useNavigate = () => {
-        return {
-            router: useRouter(),
-            pathname: usePathname(),
-            navigate: () => {
-                router.push(path!);
-            },
-        };
+    return (path?: string, options?: any) => {
+        router.push(path!);
     };
-    return useNavigate();
 };

@@ -11,6 +11,7 @@ export const AttributeFilter: React.FC<{ attributes: any; handleChange?: Functio
     const { _t } = useAppContext();
     const [searchParams] = useSearchParams();
     const selectedAttributes = searchParams?.getAll('attr');
+
     return (
         <>
             {Object.keys(attributes).length > 0 && (
@@ -33,7 +34,7 @@ export const AttributeFilter: React.FC<{ attributes: any; handleChange?: Functio
                                                 type="checkbox"
                                                 value={`${key}_${item.value}`}
                                                 name="attr"
-                                                defaultChecked={selectedAttributes.includes(`${key}_${item.value}`)}
+                                                defaultChecked={selectedAttributes?.includes(`${key}_${item.value}`)}
                                                 onChange={(e) => handleChange && handleChange(e)}
                                             />
                                             <label htmlFor={item.value}>{item.value}</label>

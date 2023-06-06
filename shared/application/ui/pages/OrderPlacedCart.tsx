@@ -28,11 +28,9 @@ export default ({ cartId }: { cartId: string }) => {
 
                 if (cart?.extra?.orderId) {
                     if (cart?.customer?.isGuest === true) {
-                        window.location.replace(path('/order/' + cart.extra.orderId + '?cartId=' + cart.cartId));
-                        //navigate(path('/order/' + cart.extra.orderId + '?cartId=' + cart.cartId));
+                        navigate(path('/order/' + cart.extra.orderId + '?cartId=' + cart.cartId));
                     } else {
-                        window.location.replace(path('/order/' + cart.extra.orderId));
-                        //navigate(path('/order/' + cart.extra.orderId));
+                        navigate(path('/order/' + cart.extra.orderId));
                     }
                 } else {
                     timeout = setTimeout(() => {

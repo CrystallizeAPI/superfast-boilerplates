@@ -1,3 +1,5 @@
+'use client';
+
 import { Grid as BaseGrid } from '../../lib/grid-tile/grid';
 import { ProductFromCell } from '../../components/item/product';
 import { DocumentFromCell } from '../../components/item/document';
@@ -55,6 +57,8 @@ export const Grid: React.FC<{ grid: any }> = ({ grid }) => {
             gridRow: `auto / span ${cell.layout.rowspan}`,
         };
     };
+
+
 
     return (
         <div className="frntr-grid">

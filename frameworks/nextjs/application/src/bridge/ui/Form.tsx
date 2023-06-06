@@ -1,17 +1,16 @@
 'use client';
 
-import { use, useRef } from 'react';
+import { useRef } from 'react';
 import { useAppContext } from '~/ui/app-context/provider';
 import { PriceRangeFilter } from '~/ui/components/search/price-range-filter';
 import { AttributeFilter } from '~/ui/components/search/attribute-filter';
-import { useRouter, useSearchParams } from 'next/navigation';
 import useNavigate from './useNavigate';
+import useSearchParams from './useSearchParams';
 
 export default ({ aggregations }: { aggregations: any }) => {
-    const router = useRouter();
-    const searchParams = useSearchParams();
+    const [searchParams] = useSearchParams();
     const formRef = useRef<HTMLFormElement>(null);
-    const location = useNavigate();
+    const navigate = useNavigate();
 
     const handleChange = (e: any) => {
         if (formRef.current) {
@@ -38,7 +37,7 @@ export default ({ aggregations }: { aggregations: any }) => {
 
     return (
         <>
-            <form method="get" action={location.pathname} ref={formRef} className="flex gap-4 flex-wrap">
+            <form method="get" action="" ref={formRef} className="flex gap-4 flex-wrap">
                 <label>
                     <select
                         name="orderBy"
@@ -60,7 +59,7 @@ export default ({ aggregations }: { aggregations: any }) => {
                 <PriceRangeFilter min={price.min} max={price.max} formRef={formRef} />
                 <AttributeFilter attributes={grouped} handleChange={handleChange} />
             </form>
-            <button onClick={() => router.push(location.pathname)}>{_t('search.removeAllFilters')}</button>
+            <button onClick={() => navigate(window.location.pathname)}>{_t('search.removeAllFilters')}</button>
         </>
     );
 };

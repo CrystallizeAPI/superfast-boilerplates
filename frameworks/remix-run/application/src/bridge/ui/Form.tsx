@@ -8,6 +8,7 @@ import { AttributeFilter } from '~/ui/components/search/attribute-filter';
 
 export default ({ aggregations }: { aggregations: any }) => {
     const navigate = useNavigate();
+    const submit = useSubmit();
     const location = useLocation();
     const transition = useTransition;
     const formRef = useRef(null);
@@ -16,7 +17,7 @@ export default ({ aggregations }: { aggregations: any }) => {
     const attributes = aggregations?.search.aggregations.attributes;
 
     function handleChange(event: any) {
-        useSubmit(event.currentTarget, { replace: true });
+        submit(event.currentTarget, { replace: true });
     }
 
     const grouped = attributes?.reduce(

@@ -120,11 +120,7 @@ const StripCheckoutForm: React.FC = () => {
                 succeeded: true,
             });
             empty();
-            //redirect to order page
-
-            window.location.replace(path(`/order/cart/${cart.cartId}`));
-
-            //navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
+            navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
         }
     };
 

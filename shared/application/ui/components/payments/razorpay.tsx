@@ -70,8 +70,7 @@ export const RazorPay: React.FC = () => {
 
                 if (result.id) {
                     empty();
-                    window.location.replace(path(`/order/cart/${cart.cartId}`));
-                    //navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
+                    navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
                 }
             },
             prefill: {

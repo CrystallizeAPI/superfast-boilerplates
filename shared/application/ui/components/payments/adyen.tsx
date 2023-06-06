@@ -59,7 +59,7 @@ export const AdyenCheckoutForm: React.FC<{
                 sessionData: data.data.sessionData,
             },
             onPaymentCompleted: (result: any, component: any) => {
-                window.location.replace(orderCartLink);
+                navigate(orderCartLink, { replace: true });
             },
             onError: (error: any, component: any) => {
                 console.error(error.name, error.message, error.stack, component);
