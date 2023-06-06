@@ -68,7 +68,7 @@ export const Klarna: React.FC = () => {
                         const approved = res.approved;
                         if (approved) {
                             empty();
-                            navigate(path(`/order/cart/${cart.cartId}`), { replace: true })
+                            navigate(path(`/order/cart/${cart.cartId}`), { replace: true });
                         }
                     },
                 );

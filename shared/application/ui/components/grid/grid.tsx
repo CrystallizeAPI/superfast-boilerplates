@@ -58,8 +58,6 @@ export const Grid: React.FC<{ grid: any }> = ({ grid }) => {
         };
     };
 
-
-
     return (
         <div className="frntr-grid">
             <BaseGrid
