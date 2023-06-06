@@ -4,6 +4,7 @@ import { CrystallizeAPI } from '~/use-cases/crystallize/read';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import ShopPage from '~/ui/pages/Shop';
+import '@splidejs/splide/dist/css/themes/splide-default.min.css';
 
 async function getData({ params }: { params: { shop: string; langstore: string } }) {
     const requestContext = getContext({

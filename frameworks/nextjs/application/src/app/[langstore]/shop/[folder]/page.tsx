@@ -7,6 +7,7 @@ import { Category as TCategory } from '~/use-cases/contracts/Category';
 import { ProductSlim } from '~/use-cases/contracts/Product';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
 import 'rc-slider/assets/index.css';
+import '@splidejs/splide/dist/css/themes/splide-default.min.css';
 
 type Data = {
     category: TCategory;

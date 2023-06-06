@@ -5,7 +5,6 @@ import { TileViewComponentProps } from '../../../lib/grid-tile/types';
 import { ProductFromCell } from '../../item/product';
 import { DocumentFromCell } from '../../item/document';
 import { LinkRenderer } from '../../../lib/grid-tile/linkRenderer';
-import '@splidejs/splide/dist/css/themes/splide-default.min.css';
 
 const itemMapping = {
     product: ProductFromCell,

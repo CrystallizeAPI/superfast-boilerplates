@@ -3,7 +3,6 @@
 import { Splide, SplideSlide } from '@splidejs/react-splide';
 import { TileViewComponentProps } from '../../../lib/grid-tile/types';
 import { Image } from '@crystallize/reactjs-components/dist/image';
-import '@splidejs/splide/dist/css/themes/splide-default.min.css';
 
 export const HeroSlider: React.FC<TileViewComponentProps> = ({ tile }) => {
     const { content } = tile;

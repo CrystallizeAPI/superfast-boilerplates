@@ -6,6 +6,7 @@ import { headers } from 'next/headers';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import LandingPage from '~/ui/pages/LandingPage';
 import { LandingPage as TLandingPage } from '~/use-cases/contracts/LandingPage';
+import '@splidejs/splide/dist/css/themes/splide-default.min.css';
 
 async function getData() {
     const requestContext = getContext({
