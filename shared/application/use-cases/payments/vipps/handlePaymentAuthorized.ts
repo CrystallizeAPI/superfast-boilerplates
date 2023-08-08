@@ -7,7 +7,6 @@ import {
     VippsReceipt,
     addVippsReceiptOrder,
 } from '@crystallize/node-service-api-request-handlers';
-import { pipeline } from 'stream';
 import pushOrder from '~/use-cases/crystallize/write/pushOrder';
 import pushVippsAuthorisedOrder from '~/use-cases/crystallize/write/pushVippsAuthorisedOrder';
 
