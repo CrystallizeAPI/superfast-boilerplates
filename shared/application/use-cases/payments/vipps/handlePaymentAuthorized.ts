@@ -7,7 +7,9 @@ import {
     VippsReceipt,
     addVippsReceiptOrder,
 } from '@crystallize/node-service-api-request-handlers';
+import { pipeline } from 'stream';
 import pushOrder from '~/use-cases/crystallize/write/pushOrder';
+import pushVippsAuthorisedOrder from '~/use-cases/crystallize/write/pushVippsAuthorisedOrder';
 
 export default async function (
     cartWrapperRepository: CartWrapperRepository,
@@ -16,7 +18,6 @@ export default async function (
     apiClient: ClientInterface,
     storeFrontConfig: TStoreFrontConfig,
 ) {
-    console.log({ payment });
     let properties = [
         {
             property: 'payment_method',
@@ -52,6 +53,13 @@ export default async function (
         subscriptionKey:
             process.env.VIPPS_SUBSCRIPTION_KEY ?? storeFrontConfig?.configuration?.VIPPS_SUBSCRIPTION_KEY ?? '',
     };
+
+    pushVippsAuthorisedOrder(
+        apiClient,
+        orderCreatedConfirmation.id,
+        process.env.VIPPS_PIPELINE_ID || '',
+        process.env.VIPPS_AUTHORIZED_STAGE_ID || '',
+    );
 
     const roundId = (value: number) => Math.round(value * 100) / 100;
 
