@@ -170,9 +170,11 @@ export const HydratedCart: React.FC = () => {
                                     <div className="flex text-grey3 text-sm justify-between w-60">
                                         <p>{_t('cart.discount')}</p>
                                         <CrystallizePrice currencyCode={contextState.currency.code}>
-                                            {total.discounts.reduce((memo: number, discount: any) => {
-                                                return memo + discount?.amount || 0;
-                                            }, 0)}
+                                            {total.discounts
+                                                ? total.discounts.reduce((memo: number, discount: any) => {
+                                                      return memo + (discount?.amount || 0)!;
+                                                  }, 0)
+                                                : 0}
                                         </CrystallizePrice>
                                     </div>
                                     <div className="flex text-grey3 text-sm justify-between w-60">
