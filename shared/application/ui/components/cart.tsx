@@ -59,6 +59,7 @@ export const HydratedCart: React.FC = () => {
     const { remoteCart, loading } = useRemoteCart();
 
     const { isImmutable, isEmpty, add: addToCart, remove: removeFromCart, clone: cartClone } = useLocalCart();
+
     const { cart, total } = remoteCart?.cart || { cart: null, total: null };
     const { savings } = remoteCart?.extra?.discounts || {
         lots: null,
