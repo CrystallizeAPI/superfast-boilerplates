@@ -22,7 +22,7 @@ export const DinteroButton: React.FC<{
             disabled={paying}
             onClick={onClick}
         >
-            <img className="px-1 h-[50px]" src={`${logo}`} height="50" alt="Vipps" />
+            <img className="px-1 h-[50px]" src={`${logo}`} height="50" alt="Dintero" />
             {paying ? (
                 <span className="text-textBlack">{_t('payment.processing')}...</span>
             ) : (
