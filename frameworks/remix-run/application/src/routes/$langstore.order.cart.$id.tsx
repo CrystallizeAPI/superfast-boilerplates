@@ -19,6 +19,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { cartId } = useLoaderData();
+    const { cartId } = useLoaderData() as { cartId: string };
     return <OrderPlacedCart cartId={cartId} />;
 };

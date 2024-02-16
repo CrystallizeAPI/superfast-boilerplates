@@ -1,4 +1,5 @@
-import { LoaderFunction, Response } from '@remix-run/node';
+import { LoaderFunction } from '@remix-run/node';
+import { Response } from '@remix-run/web-fetch';
 import ReactPDF from '@react-pdf/renderer';
 import { Invoice } from '~/ui/components/pdf/order-invoice';
 import { createOrderFetcher } from '@crystallize/js-api-client';

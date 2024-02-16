@@ -26,6 +26,9 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { orderId, cartId } = useLoaderData();
+    const { orderId, cartId } = useLoaderData() as {
+        orderId: string;
+        cartId: string;
+    };
     return <Order id={orderId} cartId={cartId} />;
 };

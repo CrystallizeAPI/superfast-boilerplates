@@ -10,10 +10,14 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-    return privateJson({ isServerSideAuthenticated: await isServerSideAuthenticated(request) });
+    return privateJson({
+        isServerSideAuthenticated: await isServerSideAuthenticated(request),
+    });
 };
 
 export default () => {
-    const { isServerSideAuthenticated } = useLoaderData();
+    const { isServerSideAuthenticated } = useLoaderData() as {
+        isServerSideAuthenticated: boolean;
+    };
     return <Orders isServerSideAuthenticated={isServerSideAuthenticated} />;
 };

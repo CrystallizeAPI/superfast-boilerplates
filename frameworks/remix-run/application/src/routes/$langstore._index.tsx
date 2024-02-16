@@ -11,7 +11,7 @@ import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server'
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
 
-export let meta: MetaFunction = ({ data }) => {
+export let meta: MetaFunction = ({ data }: { data: any }) => {
     return buildMetas(data.data);
 };
 
@@ -46,6 +46,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData();
+    const { data } = useLoaderData() as { data: any };
     return <LandingPage data={data} />;
 };

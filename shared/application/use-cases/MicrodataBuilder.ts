@@ -20,14 +20,16 @@ export const buildMetas = (data: any) => {
         image: item?.seo?.image || image || altImage,
     };
 
-    return {
-        title: seo.title,
-        'og:title': seo.title,
-        description: seo.description,
-        'og:description': seo.description,
-        'og:image': seo.image,
-        'twitter:image': seo.image,
-        'twitter:card': 'summary_large_image',
-        'twitter:description': seo.description,
-    };
+    return [
+        {
+            title: seo.title,
+            'og:title': seo.title,
+            description: seo.description,
+            'og:description': seo.description,
+            'og:image': seo.image,
+            'twitter:image': seo.image,
+            'twitter:card': 'summary_large_image',
+            'twitter:description': seo.description,
+        },
+    ];
 };

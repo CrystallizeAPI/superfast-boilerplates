@@ -5,24 +5,13 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
-    useCatch,
     useLoaderData,
     useLocation,
 } from '@remix-run/react';
-import {
-    ErrorBoundaryComponent,
-    HeadersFunction,
-    json,
-    LinksFunction,
-    LoaderFunction,
-    MetaFunction,
-    redirect,
-} from '@remix-run/node';
+import { HeadersFunction, json, LinksFunction, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
 import { Header } from '~/ui/components/layout/header';
 import { Footer } from '~/ui/components/layout/footer';
 import tailwindDefaultTheme from '~/styles/tailwind.default.css';
-import tailwindDarkTheme from '~/styles/tailwind.dark.css';
-import tailwindRaibowTheme from '~/styles/tailwind.rainbow.css';
 import React from 'react';
 import { buildStoreFrontConfiguration, getStoreFront } from '~/use-cases/storefront.server';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
@@ -30,8 +19,7 @@ import { AppContextProvider, useAppContext } from '~/ui/app-context/provider';
 import { CrystallizeProvider } from '@crystallize/reactjs-hooks';
 import { StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getContext } from '~/use-cases/http/utils';
-import { FAVICON_VARIANTS } from './routes/$langstore/favicon/$size[.png]';
-import { CatchBoundaryComponent } from '@remix-run/react/dist/routeModules';
+import { FAVICON_VARIANTS } from './routes/$langstore_.favicon.$size[.png]';
 import { StoreFrontConfiguration } from '~/use-cases/contracts/StoreFrontConfiguration';
 import {
     availableLanguages,
@@ -46,11 +34,13 @@ import { Footer as FooterType } from '~/use-cases/contracts/Footer';
 import { ErrorComponent } from '~/ui/components/error';
 
 export const meta: MetaFunction = () => {
-    return {
-        charset: 'utf-8',
-        title: `Crystallize - Superfast`,
-        viewport: 'width=device-width,initial-scale=1',
-    };
+    return [
+        {
+            charset: 'utf-8',
+            title: `Crystallize - Superfast`,
+            viewport: 'width=device-width,initial-scale=1',
+        },
+    ];
 };
 
 export const links: LinksFunction = () => {
@@ -60,25 +50,6 @@ export const links: LinksFunction = () => {
             href: tailwindDefaultTheme,
         },
     ];
-};
-
-function getTailwindThemeForConfig(theme: string) {
-    switch (theme) {
-        case 'dark':
-            return tailwindDarkTheme;
-        case 'rainbow':
-            return tailwindRaibowTheme;
-        default:
-            return tailwindDefaultTheme;
-    }
-}
-
-export const headers: HeadersFunction = ({ loaderHeaders }) => {
-    return {
-        Link: `<${getTailwindThemeForConfig(
-            loaderHeaders.get('X-SuperFast-Theme') as string,
-        )}>; rel=preload; as=style; crossorigin=anonymous`,
-    };
 };
 
 export let loader: LoaderFunction = async ({ request }) => {
@@ -190,7 +161,6 @@ const Document: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                             }
                         </script>
                         <script defer src="https://pim.crystallize.com/static/frontend-preview-listener.js" />
-                        <link rel="stylesheet" href={getTailwindThemeForConfig(frontConfiguration.theme)} />
                     </head>
                     <body data-theme={frontConfiguration.theme}>
                         {children}
@@ -244,7 +214,7 @@ export default () => {
     );
 };
 
-export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: { error: any }) => {
+export const ErrorBoundary = ({ error }: { error: any }) => {
     console.error(error);
     return (
         <html>
@@ -254,35 +224,8 @@ export const ErrorBoundary: ErrorBoundaryComponent = ({ error }: { error: any })
                 <Links />
             </head>
             <body>
-                <ErrorComponent text={error.message} code={500} />
+                <ErrorComponent text={'Error'} code={500} />
                 {/* add the UI you want your users to see */}
-                <Scripts />
-            </body>
-        </html>
-    );
-};
-
-export const CatchBoundary: CatchBoundaryComponent = () => {
-    const caught = useCatch();
-    if (caught.data !== null) {
-        return (
-            <Document>
-                <Layout>
-                    <ErrorComponent text={caught.statusText} code={caught.status} />
-                </Layout>
-            </Document>
-        );
-    }
-
-    return (
-        <html>
-            <head>
-                <title>Oh no!</title>
-                <Meta />
-                <Links />
-            </head>
-            <body>
-                <ErrorComponent />
                 <Scripts />
             </body>
         </html>

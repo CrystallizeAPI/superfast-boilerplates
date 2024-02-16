@@ -26,6 +26,8 @@ export const links: LinksFunction = () => {
 };
 
 export default () => {
-    const { isServerSideAuthenticated } = useLoaderData();
+    const { isServerSideAuthenticated } = useLoaderData() as {
+        isServerSideAuthenticated: boolean;
+    };
     return <Checkout isServerSideAuthenticated={isServerSideAuthenticated} />;
 };

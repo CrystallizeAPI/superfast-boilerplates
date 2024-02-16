@@ -1,33 +1,30 @@
-import { LoaderFunction, Response } from '@remix-run/node';
+import { LoaderFunction } from '@remix-run/node';
+import { Response } from '@remix-run/web-fetch';
 import ReactPDF from '@react-pdf/renderer';
 import { StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { getContext } from '~/use-cases/http/utils';
-import { Folder } from '~/ui/components/pdf/folder';
+import { SingleProduct } from '~/ui/components/pdf/single-product';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
-import { ProductSlim } from '~/use-cases/contracts/Product';
-import { Category } from '~/use-cases/contracts/Category';
+import { Product } from '~/use-cases/contracts/Product';
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
 
 export const loader: LoaderFunction = async ({ request, params }) => {
     const requestContext = getContext(request);
-    const path = `/shop/${params.folder}`;
+    const path = `/shop/${params.folder}/${params.product}`;
     const { shared } = await getStoreFront(requestContext.host);
     const user = await authenticatedUser(request);
-
     const data = (await dataFetcherForShapePage(
-        'category',
+        'product',
         path,
         requestContext,
         params,
         marketIdentifiersForUser(user),
     )) as {
-        products: ProductSlim[];
-        category: Category;
+        product: Product;
     };
-    const { products, category } = data;
-    const pdf = await ReactPDF.renderToStream(<Folder category={category} products={products} />);
+    const pdf = await ReactPDF.renderToStream(<SingleProduct product={data.product} />);
     return new Response(pdf, {
         headers: {
             ...StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier).headers,

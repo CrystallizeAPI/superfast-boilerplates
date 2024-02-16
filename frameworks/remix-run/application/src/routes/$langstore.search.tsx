@@ -26,6 +26,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData();
+    const { data } = useLoaderData() as { data: any };
     return <Search products={data} />;
 };

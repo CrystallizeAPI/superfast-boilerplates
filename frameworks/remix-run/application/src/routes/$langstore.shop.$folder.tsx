@@ -45,6 +45,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData();
+    const { data } = useLoaderData() as { data: any };
+
     return <Category data={data} />;
 };

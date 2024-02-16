@@ -1,4 +1,4 @@
-import { HeadersFunction, json, LoaderFunction, MetaFunction, Response } from '@remix-run/node';
+import { HeadersFunction, json, LoaderFunction, MetaFunction } from '@remix-run/node';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
@@ -49,7 +49,7 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data, shapeIdentifier } = useLoaderData();
+    const { data, shapeIdentifier } = useLoaderData() as any;
     switch (shapeIdentifier) {
         case 'product':
             return <Product data={data} />;

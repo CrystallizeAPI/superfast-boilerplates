@@ -1,4 +1,5 @@
 import { LoaderFunction } from '@remix-run/node';
+import { Response } from '@remix-run/web-fetch';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';

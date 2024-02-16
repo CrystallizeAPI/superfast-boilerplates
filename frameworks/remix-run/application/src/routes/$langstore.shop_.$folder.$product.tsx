@@ -14,7 +14,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export let meta: MetaFunction = ({ data }) => {
+export let meta: MetaFunction = ({ data }: { data: any }) => {
     return buildMetas(data.data);
 };
 
@@ -33,6 +33,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData();
+    const { data } = useLoaderData() as { data: any };
     return <Product data={data} />;
 };

@@ -11,5 +11,10 @@ export const action: ActionFunction = async ({ request }) => {
     const body = await request.json();
     const user = await authenticatedUser(request);
 
-    return privateJson(await handleCart(storefront.config, storefront.apiClient, requestContext, { ...body, user }));
+    return privateJson(
+        await handleCart(storefront.config, storefront.apiClient, requestContext, {
+            ...body,
+            user,
+        }),
+    );
 };
