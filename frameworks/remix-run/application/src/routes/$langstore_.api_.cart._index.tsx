@@ -1,4 +1,4 @@
-import { ActionFunction } from '@remix-run/node';
+import { ActionFunction, json } from '@remix-run/node';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { privateJson } from '~/core/bridge/privateJson.server';
 import { getContext } from '~/use-cases/http/utils';
@@ -17,4 +17,10 @@ export const action: ActionFunction = async ({ request }) => {
             user,
         }),
     );
+};
+
+export const loader = () => {
+    return json({
+        message: 'Testing the cart endpoint.',
+    });
 };

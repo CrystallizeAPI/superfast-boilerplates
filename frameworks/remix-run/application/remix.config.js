@@ -6,6 +6,8 @@
 module.exports = {
     ignoredRouteFiles: ['.*'],
     appDirectory: 'src',
-    devServerPort: 3019,
+    dev: {
+        port: 8002,
+    },
     serverModuleFormat: 'cjs',
 };
