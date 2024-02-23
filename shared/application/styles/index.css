@@ -338,7 +338,6 @@
         align-items: stretch;
     }
 
-
     .frntr-grid-row {
         display: grid;
     }
@@ -439,7 +438,7 @@
             min-width: 180px;
             max-width: 250px;
             width: 100%;
-            border-right: 1px solid #dfdfdf; */
+            border-right: 1px solid #dfdfdf;
             padding: 10px 30px;
             border-radius: 4px;
         }
