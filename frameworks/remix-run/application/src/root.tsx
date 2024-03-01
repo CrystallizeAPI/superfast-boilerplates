@@ -8,10 +8,9 @@ import {
     useLoaderData,
     useLocation,
 } from '@remix-run/react';
-import { HeadersFunction, json, LinksFunction, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
+import { json, LinksFunction, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
 import { Header } from '~/ui/components/layout/header';
 import { Footer } from '~/ui/components/layout/footer';
-import tailwindDefaultTheme from '~/styles/tailwind.default.css';
 import React from 'react';
 import { buildStoreFrontConfiguration, getStoreFront } from '~/use-cases/storefront.server';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
@@ -33,6 +32,7 @@ import fetchTranslations from '~/use-cases/fetchTranslations.server';
 import { Tree } from '~/use-cases/contracts/Tree';
 import { Footer as FooterType } from '~/use-cases/contracts/Footer';
 import { ErrorComponent } from '~/ui/components/error';
+import tailwindDefaultTheme from '~/styles/tailwind.default.css';
 
 export const meta: MetaFunction = () => {
     return [
