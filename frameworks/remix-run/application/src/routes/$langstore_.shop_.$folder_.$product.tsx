@@ -9,6 +9,7 @@ import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server'
 import videoStyles from '@crystallize/reactjs-components/assets/video/styles.css';
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
+import type { Product as ProductType } from '~/use-cases/contracts/Product';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
@@ -33,6 +34,8 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData() as { data: any };
+    const { data } = useLoaderData() as {
+        data: { product: ProductType; preSelectedSku: string };
+    };
     return <Product data={data} />;
 };

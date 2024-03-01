@@ -11,6 +11,14 @@ import Category from '~/ui/pages/Category';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
+import { Category as CategoryType } from '~/use-cases/contracts/Category';
+import { ProductSlim } from '~/use-cases/contracts/Product';
+
+export type LoaderData = {
+    category: CategoryType;
+    products: ProductSlim[];
+    priceRangeAndAttributes: any;
+};
 
 export const links: LinksFunction = () => {
     return [
@@ -24,8 +32,8 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export let meta: MetaFunction = ({ data }) => {
-    return buildMetas(data);
+export let meta: MetaFunction = ({ data }: { data: any }) => {
+    return buildMetas(data?.data?.category);
 };
 
 export const loader: LoaderFunction = async ({ request, params }) => {
@@ -45,7 +53,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData() as { data: any };
-
+    const { data } = useLoaderData() as { data: LoaderData };
     return <Category data={data} />;
 };

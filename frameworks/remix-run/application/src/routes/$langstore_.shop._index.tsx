@@ -16,8 +16,8 @@ export const links: LinksFunction = () => {
     return [{ rel: 'stylesheet', href: splideStyles }];
 };
 
-export let meta: MetaFunction = ({ data }) => {
-    return buildMetas(data);
+export let meta: MetaFunction = ({ data }: { data: any }) => {
+    return buildMetas(data?.shop);
 };
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {

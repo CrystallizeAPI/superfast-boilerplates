@@ -17,7 +17,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export let meta: MetaFunction = ({ data }) => {
+export let meta: MetaFunction = ({ data }: { data: any }) => {
     return buildMetas(data);
 };
 
