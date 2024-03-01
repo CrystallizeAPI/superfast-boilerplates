@@ -1,5 +1,3 @@
-const plugin = require('tailwindcss/plugin');
-
 module.exports = {
     mode: 'jit',
     content: ['./src/**/*.{ts,tsx,jsx,js}'],
@@ -71,5 +69,4 @@ module.exports = {
         },
     },
     variants: {},
-    plugins: [require('@tailwindcss/line-clamp')],
 };
