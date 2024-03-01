@@ -6,15 +6,31 @@ import { createOrderFetcher } from '@crystallize/js-api-client';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { getContext } from '~/use-cases/http/utils';
 
-export const loader: LoaderFunction = async ({ context, params, request }) => {
+export const loader: LoaderFunction = async ({ params, request }) => {
     const requestContext = getContext(request);
     const { secret } = await getStoreFront(requestContext.host);
     const response = await createOrderFetcher(secret.apiClient).byId(`${params.id}`);
     let pdf = await ReactPDF.renderToStream(<Invoice data={response} />);
 
-    return new Response(pdf, {
-        headers: {
-            'Content-Type': 'application/pdf',
-        },
+    let body: Buffer = await new Promise((resolve, reject) => {
+        let chunks: Buffer[] = [];
+        pdf.on('data', (chunk) => {
+            chunks.push(chunk);
+        });
+        pdf.on('end', () => {
+            resolve(Buffer.concat(chunks));
+        });
+        pdf.on('error', (error) => {
+            reject(error);
+        });
+    });
+
+    let headers = new Headers({
+        'Content-Type': 'application/pdf',
+    });
+
+    return new Response(body, {
+        status: 200,
+        headers,
     });
 };

@@ -25,10 +25,24 @@ export const loader: LoaderFunction = async ({ request, params }) => {
         product: Product;
     };
     const pdf = await ReactPDF.renderToStream(<SingleProduct product={data.product} />);
-    return new Response(pdf, {
-        headers: {
-            ...StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier).headers,
-            'Content-Type': 'application/pdf',
-        },
+    let body: Buffer = await new Promise((resolve, reject) => {
+        let chunks: Buffer[] = [];
+        pdf.on('data', (chunk) => {
+            chunks.push(chunk);
+        });
+        pdf.on('end', () => {
+            resolve(Buffer.concat(chunks));
+        });
+        pdf.on('error', (error) => {
+            reject(error);
+        });
+    });
+    let headers = new Headers({
+        ...StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', [path], shared.config.tenantIdentifier).headers,
+        'Content-Type': 'application/pdf',
+    });
+    return new Response(body, {
+        status: 200,
+        headers,
     });
 };
