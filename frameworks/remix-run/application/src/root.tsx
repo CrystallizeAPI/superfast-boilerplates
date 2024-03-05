@@ -5,8 +5,10 @@ import {
     Outlet,
     Scripts,
     ScrollRestoration,
+    isRouteErrorResponse,
     useLoaderData,
     useLocation,
+    useRouteError,
 } from '@remix-run/react';
 import { json, LinksFunction, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
 import { Header } from '~/ui/components/layout/header';
@@ -111,7 +113,7 @@ type LoaderData = {
 };
 
 const Document: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { isHTTPS, frontConfiguration, translations, baseUrl } = useLoaderData<LoaderData>();
+    const { frontConfiguration, translations, baseUrl } = useLoaderData<LoaderData>();
     let location = useLocation();
     const path = '/' + location.pathname.split('/').slice(2).join('/');
 
@@ -214,19 +216,21 @@ export default () => {
     );
 };
 
-export const ErrorBoundary = ({ error }: { error: any }) => {
-    console.error(error);
+export const ErrorBoundary = () => {
+    const error = useRouteError();
     return (
         <html>
             <head>
-                <title>Oh no!</title>
+                <title>Oops!</title>
                 <Meta />
                 <Links />
             </head>
             <body>
-                <ErrorComponent text={'Error'} code={500} />
-                {/* add the UI you want your users to see */}
-                <Scripts />
+                {isRouteErrorResponse(error) ? (
+                    <ErrorComponent text={error.statusText} code={error.status} />
+                ) : (
+                    <ErrorComponent code={500} />
+                )}
             </body>
         </html>
     );

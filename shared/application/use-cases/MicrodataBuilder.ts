@@ -21,15 +21,31 @@ export const buildMetas = (data: any) => {
     };
 
     return [
+        { title: seo.title },
         {
-            title: seo.title,
-            'og:title': seo.title,
-            description: seo.description,
-            'og:description': seo.description,
-            'og:image': seo.image,
-            'twitter:image': seo.image,
-            'twitter:card': 'summary_large_image',
-            'twitter:description': seo.description,
+            property: 'og:title',
+            content: seo.title,
+        },
+        { name: 'description', content: seo.description },
+        {
+            property: 'og:description',
+            content: seo.description,
+        },
+        {
+            property: 'og:image',
+            content: seo.image,
+        },
+        {
+            property: 'twitter:image',
+            content: seo.image,
+        },
+        {
+            property: 'twitter:card',
+            content: 'summary_large_image',
+        },
+        {
+            property: 'twitter:description',
+            content: seo.description,
         },
     ];
 };

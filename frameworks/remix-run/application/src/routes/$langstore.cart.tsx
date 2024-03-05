@@ -9,7 +9,6 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
 };
 
 export const loader: LoaderFunction = async ({ request }) => {
-    console.log('cart loader');
     const requestContext = getContext(request);
     const { shared } = await getStoreFront(requestContext.host);
     return json({}, StoreFrontAwaretHttpCacheHeaderTagger('15s', '1w', ['cart'], shared.config.tenantIdentifier));

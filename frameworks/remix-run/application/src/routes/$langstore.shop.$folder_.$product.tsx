@@ -15,8 +15,17 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export let meta: MetaFunction = ({ data }: { data: any }) => {
-    return buildMetas(data.data);
+export let meta: MetaFunction = ({ data }) => {
+    return buildMetas(
+        (
+            data as {
+                data: {
+                    product: ProductType;
+                    preSelectedSku: string;
+                };
+            }
+        )?.data,
+    );
 };
 
 export const links: LinksFunction = () => {

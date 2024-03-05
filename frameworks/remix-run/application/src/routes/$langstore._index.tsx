@@ -10,9 +10,10 @@ import LandingPage from '~/ui/pages/LandingPage';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
+import { LandingPage as LandingPageType } from '~/use-cases/contracts/LandingPage';
 
-export let meta: MetaFunction = ({ data }: { data: any }) => {
-    return buildMetas(data.data);
+export let meta: MetaFunction = ({ data }) => {
+    return buildMetas(data as LandingPageType);
 };
 
 export const headers: HeadersFunction = ({ parentHeaders, loaderHeaders }) => {
@@ -46,6 +47,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData() as { data: any };
+    const { data } = useLoaderData() as { data: LandingPageType };
     return <LandingPage data={data} />;
 };

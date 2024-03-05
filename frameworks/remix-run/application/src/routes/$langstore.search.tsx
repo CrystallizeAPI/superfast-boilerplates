@@ -5,6 +5,7 @@ import { getStoreFront } from '~/use-cases/storefront.server';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
 import { getContext } from '~/use-cases/http/utils';
 import Search from '~/ui/pages/Search';
+import { ProductSlim } from '~/use-cases/contracts/Product';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
@@ -26,6 +27,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData() as { data: any };
+    const { data } = useLoaderData() as { data: ProductSlim[] };
     return <Search products={data} />;
 };
