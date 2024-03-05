@@ -18,8 +18,7 @@ import { AppContextProvider, useAppContext } from '~/ui/app-context/provider';
 import { CrystallizeProvider } from '@crystallize/reactjs-hooks';
 import { StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getContext } from '~/use-cases/http/utils';
-//@todo: Fix favicon
-// import { FAVICON_VARIANTS } from "./routes/$langstore_.favicon.$size[.png]";
+import { FAVICON_VARIANTS } from './routes/$langstore.favicon.$size[.png]';
 import { StoreFrontConfiguration } from '~/use-cases/contracts/StoreFrontConfiguration';
 import {
     availableLanguages,
@@ -32,7 +31,7 @@ import fetchTranslations from '~/use-cases/fetchTranslations.server';
 import { Tree } from '~/use-cases/contracts/Tree';
 import { Footer as FooterType } from '~/use-cases/contracts/Footer';
 import { ErrorComponent } from '~/ui/components/error';
-import tailwindDefaultTheme from '~/styles/tailwind.default.css';
+import tailwindTheme from '~/styles/tailwind.css';
 
 export const meta: MetaFunction = () => {
     return [
@@ -48,7 +47,7 @@ export const links: LinksFunction = () => {
     return [
         {
             rel: 'stylesheet',
-            href: tailwindDefaultTheme,
+            href: tailwindTheme,
         },
     ];
 };
@@ -141,8 +140,7 @@ const Document: React.FC<{ children: React.ReactNode }> = ({ children }) => {
                         <meta name="viewport" content="width=device-width,initial-scale=1" />
                         <meta name="apple-mobile-web-app-capable" content="yes" />
                         <meta name="mobile-web-app-capable" content="yes" />
-                        {/* @todo: Fix favicon */}
-                        {/* <Favicons /> */}
+                        <Favicons />
                         <link rel="manifest" href="/manifest.json" />
                         <meta name="msapplication-TileColor" content="#da532c" />
                         <meta name="theme-color" content="#ffffff" />
@@ -176,25 +174,23 @@ const Document: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     );
 };
 
-//@todo: fix favicon
+const Favicons: React.FC = () => {
+    const { path } = useAppContext();
+    const linkTags = Object.entries(FAVICON_VARIANTS).map(([variant, meta]) => {
+        const extra = meta.extra ?? {};
+        return (
+            <link
+                key={`/favicon/${variant}.png`}
+                rel={meta.rel}
+                sizes={`${meta.size}x${meta.size}`}
+                href={path(`/favicon/${variant}.png`)}
+                {...extra}
+            />
+        );
+    });
 
-// const Favicons: React.FC = () => {
-//   const { path } = useAppContext();
-//   const linkTags = Object.entries(FAVICON_VARIANTS).map(([variant, meta]) => {
-//     const extra = meta.extra ?? {};
-//     return (
-//       <link
-//         key={`/favicon/${variant}.png`}
-//         rel={meta.rel}
-//         sizes={`${meta.size}x${meta.size}`}
-//         href={path(`/favicon/${variant}.png`)}
-//         {...extra}
-//       />
-//     );
-//   });
-
-//   return <>{linkTags}</>;
-// };
+    return <>{linkTags}</>;
+};
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
     const { navigation, footer } = useLoaderData<LoaderData>();

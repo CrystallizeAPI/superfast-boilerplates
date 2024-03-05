@@ -5,14 +5,10 @@
     "license": "MIT",
     "sideEffects": false,
     "scripts": {
-        "build": "npm run build:css:default && npm run build:css:dark && npm run build:css:rainbow && remix build",
-        "build:css:default": "tailwindcss -c src/styles/tailwind/default.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.default.css",
-        "build:css:dark": "tailwindcss -c src/styles/tailwind/dark.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.dark.css",
-        "build:css:rainbow": "tailwindcss -c src/styles/tailwind/dark.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.rainbow.css",
+        "build": "npm run build:css && remix build",
+        "build:css": "tailwindcss -c tailwind.config.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.css",
         "dev": "remix dev",
-        "dev:css:default": "tailwindcss -c src/styles/tailwind/default.js -w -i ./src/styles/index.css -o ./src/styles/tailwind.default.css",
-        "dev:css:dark": "tailwindcss -c src/styles/tailwind/dark.js -w -i ./src/styles/index.css -o ./src/styles/tailwind.dark.css",
-        "dev:css:rainbow": "tailwindcss -c src/styles/tailwind/dark.js -w -i ./src/styles/index.css -o ./src/styles/tailwind.rainbow.css",
+        "dev:css": "tailwindcss -c tailwind.config.js -w -i ./src/styles/index.css -o ./src/styles/tailwind.css",
         "start": "remix-serve ./build/index.js",
         "test": "playwright test",
         "playwright:install": "playwright install"
