@@ -1,4 +1,4 @@
-import { json, LoaderFunction, HeadersFunction } from '@remix-run/node';
+import { json, LoaderFunction, HeadersFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getContext } from '~/use-cases/http/utils';
@@ -9,7 +9,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const { shared } = await getStoreFront(requestContext.host);
 
@@ -26,9 +26,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { orderId, cartId } = useLoaderData() as {
-        orderId: string;
-        cartId: string;
-    };
+    const { orderId, cartId } = useLoaderData<typeof loader>();
     return <Order id={orderId} cartId={cartId} />;
 };

@@ -1,11 +1,10 @@
-import { HeadersFunction, json, LoaderFunction, MetaFunction } from '@remix-run/node';
+import { HeadersFunction, json, LoaderFunction, LoaderFunctionArgs, MetaFunction } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
 import { buildMetas } from '~/use-cases/MicrodataBuilder';
 import { getContext } from '~/use-cases/http/utils';
-import { CategoryWithChildren } from '~/use-cases/contracts/Category';
 import Stories from '~/ui/pages/Stories';
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
@@ -18,7 +17,7 @@ export let meta: MetaFunction = ({ data }) => {
     return buildMetas(data);
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const path = `/stories`;
     const { shared, secret } = await getStoreFront(requestContext.host);
@@ -34,6 +33,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default () => {
-    const { folder } = useLoaderData() as { folder: CategoryWithChildren };
+    const { folder } = useLoaderData<typeof loader>();
     return <Stories folder={folder} />;
 };

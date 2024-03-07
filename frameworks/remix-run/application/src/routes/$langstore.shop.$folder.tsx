@@ -1,4 +1,11 @@
-import { HeadersFunction, json, LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+import {
+    HeadersFunction,
+    json,
+    LinksFunction,
+    LoaderFunction,
+    LoaderFunctionArgs,
+    MetaFunction,
+} from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import sliderStyles from 'rc-slider/assets/index.css';
@@ -11,14 +18,6 @@ import Category from '~/ui/pages/Category';
 import dataFetcherForShapePage from '~/use-cases/dataFetcherForShapePage.server';
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
-import { Category as CategoryType } from '~/use-cases/contracts/Category';
-import { ProductSlim } from '~/use-cases/contracts/Product';
-
-export type LoaderData = {
-    category: CategoryType;
-    products: ProductSlim[];
-    priceRangeAndAttributes: any;
-};
 
 export const links: LinksFunction = () => {
     return [
@@ -36,7 +35,7 @@ export let meta: MetaFunction = ({ data }: { data: any }) => {
     return buildMetas(data?.data?.category);
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const path = `/shop/${params.folder}`;
     const { shared } = await getStoreFront(requestContext.host);
@@ -53,6 +52,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData() as { data: LoaderData };
+    const { data } = useLoaderData<typeof loader>();
     return <Category data={data} />;
 };

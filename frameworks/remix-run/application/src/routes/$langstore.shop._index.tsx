@@ -1,4 +1,11 @@
-import { HeadersFunction, json, LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+import {
+    HeadersFunction,
+    json,
+    LinksFunction,
+    LoaderFunction,
+    LoaderFunctionArgs,
+    MetaFunction,
+} from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 
 import splideStyles from '@splidejs/splide/dist/css/themes/splide-default.min.css';
@@ -24,7 +31,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const path = '/shop';
     const { shared, secret } = await getStoreFront(requestContext.host);
@@ -40,6 +47,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { shop } = useLoaderData() as { shop: Shop };
+    const { shop } = useLoaderData<typeof loader>();
     return <ShopPage shop={shop} />;
 };

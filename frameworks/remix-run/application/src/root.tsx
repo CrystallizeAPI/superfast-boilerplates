@@ -33,7 +33,7 @@ import fetchTranslations from '~/use-cases/fetchTranslations.server';
 import { Tree } from '~/use-cases/contracts/Tree';
 import { Footer as FooterType } from '~/use-cases/contracts/Footer';
 import { ErrorComponent } from '~/ui/components/error';
-import tailwindTheme from '~/styles/tailwind.css';
+import tailwindTheme from '~/styles/index.css';
 
 export const meta: MetaFunction = () => {
     return [

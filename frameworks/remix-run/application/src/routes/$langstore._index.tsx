@@ -1,4 +1,11 @@
-import { HeadersFunction, json, LinksFunction, LoaderFunction, MetaFunction } from '@remix-run/node';
+import {
+    HeadersFunction,
+    json,
+    LinksFunction,
+    LoaderFunction,
+    LoaderFunctionArgs,
+    MetaFunction,
+} from '@remix-run/node';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import splideStyles from '@splidejs/splide/dist/css/themes/splide-default.min.css';
 import { useLoaderData } from '@remix-run/react';
@@ -30,7 +37,7 @@ export const links: LinksFunction = () => {
     ];
 };
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const path = `/frontpage`;
     const { shared } = await getStoreFront(requestContext.host);
@@ -47,6 +54,6 @@ export const loader: LoaderFunction = async ({ request, params }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData() as { data: LandingPageType };
+    const { data } = useLoaderData<typeof loader>();
     return <LandingPage data={data} />;
 };

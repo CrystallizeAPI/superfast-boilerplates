@@ -1,17 +1,16 @@
-import { HeadersFunction, json, LoaderFunction } from '@remix-run/node';
+import { HeadersFunction, json, LoaderFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { useLoaderData } from '@remix-run/react';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { CrystallizeAPI } from '~/use-cases/crystallize/read';
 import { getContext } from '~/use-cases/http/utils';
 import Search from '~/ui/pages/Search';
-import { ProductSlim } from '~/use-cases/contracts/Product';
 
 export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const { shared, secret } = await getStoreFront(requestContext.host);
     const params = requestContext.url.searchParams.get('q');
@@ -27,6 +26,6 @@ export const loader: LoaderFunction = async ({ request }) => {
 };
 
 export default () => {
-    const { data } = useLoaderData() as { data: ProductSlim[] };
+    const { data } = useLoaderData<typeof loader>();
     return <Search products={data} />;
 };

@@ -1,5 +1,5 @@
 import { HttpCacheHeaderTaggerFromLoader } from '~/use-cases/http/cache';
-import { HeadersFunction, LinksFunction, LoaderFunction } from '@remix-run/node';
+import { HeadersFunction, LinksFunction, LoaderFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { isAuthenticated as isServerSideAuthenticated } from '~/core/authentication.server';
 import { useLoaderData } from '@remix-run/react';
 import { privateJson } from '~/core/bridge/privateJson.server';
@@ -10,7 +10,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
     return privateJson({
         isServerSideAuthenticated: await isServerSideAuthenticated(request),
     });
@@ -26,8 +26,6 @@ export const links: LinksFunction = () => {
 };
 
 export default () => {
-    const { isServerSideAuthenticated } = useLoaderData() as {
-        isServerSideAuthenticated: boolean;
-    };
+    const { isServerSideAuthenticated } = useLoaderData<typeof loader>();
     return <Checkout isServerSideAuthenticated={isServerSideAuthenticated} />;
 };

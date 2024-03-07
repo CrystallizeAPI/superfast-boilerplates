@@ -4,7 +4,7 @@ import { createMailer } from '~/use-cases/services.server';
 import { getContext } from '~/use-cases/http/utils';
 import sendMagickLink from '~/use-cases/user/sendMagickLink';
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request }) => {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const mailer = createMailer(`${process.env.MAILER_DSN}`);

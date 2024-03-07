@@ -18,9 +18,3 @@ export const action: ActionFunction = async ({ request }) => {
         }),
     );
 };
-
-export const loader = () => {
-    return json({
-        message: 'Testing the cart endpoint.',
-    });
-};
