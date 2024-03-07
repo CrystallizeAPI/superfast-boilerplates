@@ -1,10 +1,10 @@
-import { ActionFunction, json } from '@remix-run/node';
+import { ActionFunction, ActionFunctionArgs, json } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import sendOrderCreatedReceipt from '~/use-cases/user/sendOrderCreatedReceipt';
 import { createMailer } from '~/use-cases/services.server';
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
     if (request.method !== 'POST') {
         return json({ message: 'Method not allowed' }, 405);
     }

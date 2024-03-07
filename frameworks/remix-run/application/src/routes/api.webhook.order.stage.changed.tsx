@@ -1,4 +1,4 @@
-import { ActionFunction, json } from '@remix-run/node';
+import { ActionFunction, ActionFunctionArgs, json } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
 import vippsPipelineChanges from '~/use-cases/payments/vipps/vippsPipelineChanges';
 import { getStoreFront } from '~/use-cases/storefront.server';
@@ -29,7 +29,7 @@ import { getStoreFront } from '~/use-cases/storefront.server';
 //   }
 // }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
     if (request.method !== 'POST') {
         return json({ message: 'Method not allowed' }, 405);
     }

@@ -1,10 +1,10 @@
-import { LoaderFunction, redirect } from '@remix-run/node';
+import { LoaderFunction, LoaderFunctionArgs, redirect } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { authCookie } from '~/core/cookies.server';
 import handleMagickLink from '~/use-cases/user/handleMagickLink';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const config = require('platformsh-config').config();

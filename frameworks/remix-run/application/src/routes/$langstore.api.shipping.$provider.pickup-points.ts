@@ -1,10 +1,10 @@
-import { LoaderFunction, json } from '@remix-run/node';
+import { LoaderFunction, LoaderFunctionArgs, json } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
 import fetchPickupPoints from '~/use-cases/payments/montonio/fetchPickupPoints';
 import { storage } from '~/use-cases/services.server';
 import { getStoreFront } from '~/use-cases/storefront.server';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderFunctionArgs) => {
     if (params.provider !== 'montonio') {
         return json({ error: 'Provider not supported' }, { status: 400 });
     }

@@ -1,4 +1,4 @@
-import { LoaderFunction } from '@remix-run/node';
+import { LoaderFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { Response } from '@remix-run/web-fetch';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
@@ -38,7 +38,7 @@ import {
     sharpFromImageBuffer,
 } from '~/core/favicon.server';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const size = Number(params.size);
 

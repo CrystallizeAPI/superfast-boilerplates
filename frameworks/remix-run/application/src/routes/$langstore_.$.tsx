@@ -25,7 +25,6 @@ export const loader: LoaderFunction = async ({ request, params }: LoaderFunction
     const requestContext = getContext(request);
     const { shared, secret } = await getStoreFront(requestContext.host);
     const path = '/' + params['*'];
-    const crystallizePath = path.replace('.pdf', '');
     const api = CrystallizeAPI({
         apiClient: secret.apiClient,
         language: requestContext.language,

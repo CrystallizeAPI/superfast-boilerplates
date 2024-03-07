@@ -1,4 +1,4 @@
-import { ActionFunction, json } from '@remix-run/node';
+import { ActionFunction, ActionFunctionArgs, json } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
 import { cartWrapperRepository } from '~/use-cases/services.server';
 import { getStoreFront } from '~/use-cases/storefront.server';
@@ -11,7 +11,7 @@ import { default as initiateAdyenPayment } from '~/use-cases/payments/adyen/init
 import { default as initiateVippsPayment } from '~/use-cases/payments/vipps/initiatePayment';
 import { default as initiateDinteroPayment } from '~/use-cases/payments/dintero/initiatePayment';
 
-export const action: ActionFunction = async ({ request, params }) => {
+export const action: ActionFunction = async ({ request, params }: ActionFunctionArgs) => {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const body = await request.json();

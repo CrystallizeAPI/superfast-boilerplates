@@ -10,7 +10,7 @@ import {
     useLocation,
     useRouteError,
 } from '@remix-run/react';
-import { json, LinksFunction, LoaderFunction, MetaFunction, redirect } from '@remix-run/node';
+import { json, LinksFunction, LoaderFunction, LoaderFunctionArgs, MetaFunction, redirect } from '@remix-run/node';
 import { Header } from '~/ui/components/layout/header';
 import { Footer } from '~/ui/components/layout/footer';
 import React from 'react';
@@ -54,7 +54,7 @@ export const links: LinksFunction = () => {
     ];
 };
 
-export let loader: LoaderFunction = async ({ request }) => {
+export let loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     if (!isValidLanguageMarket(requestContext.language, requestContext.market)) {
         return redirect('/' + availableLanguages[0] + requestContext.url.pathname, 301);
@@ -99,21 +99,8 @@ export let loader: LoaderFunction = async ({ request }) => {
     );
 };
 
-type LoaderData = {
-    frontConfiguration: StoreFrontConfiguration;
-    navigation: {
-        folders: Tree[];
-        topics: Tree[];
-    };
-    isHTTPS: boolean;
-    host: string;
-    translations: any;
-    baseUrl: string;
-    footer: FooterType;
-};
-
 const Document: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { frontConfiguration, translations, baseUrl } = useLoaderData<LoaderData>();
+    const { frontConfiguration, translations, baseUrl } = useLoaderData<typeof loader>();
     let location = useLocation();
     const path = '/' + location.pathname.split('/').slice(2).join('/');
 
@@ -195,7 +182,7 @@ const Favicons: React.FC = () => {
 };
 
 const Layout: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-    const { navigation, footer } = useLoaderData<LoaderData>();
+    const { navigation, footer } = useLoaderData<typeof loader>();
 
     return (
         <>

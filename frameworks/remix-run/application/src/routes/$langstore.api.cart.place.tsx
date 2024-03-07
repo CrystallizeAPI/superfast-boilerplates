@@ -1,11 +1,11 @@
-import { ActionFunction } from '@remix-run/node';
+import { ActionFunction, ActionFunctionArgs } from '@remix-run/node';
 import { authenticate, isAuthenticated as isServerSideAuthenticated } from '~/core/authentication.server';
 import { getContext } from '~/use-cases/http/utils';
 import { privateJson } from '~/core/bridge/privateJson.server';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import handlePlaceCart from '~/use-cases/checkout/handlePlaceCart';
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const isAuthenticated = await isServerSideAuthenticated(request);

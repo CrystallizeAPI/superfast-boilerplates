@@ -1,10 +1,10 @@
-import { LoaderFunction, redirect } from '@remix-run/node';
+import { LoaderFunction, LoaderFunctionArgs, redirect } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { authCookie } from '~/core/cookies.server';
 import handleVippsLogin from '~/use-cases/user/handleVippsLogin';
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const config = require('platformsh-config').config();

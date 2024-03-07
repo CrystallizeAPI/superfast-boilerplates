@@ -1,4 +1,4 @@
-import { LoaderFunction } from '@remix-run/node';
+import { LoaderFunction, LoaderFunctionArgs } from '@remix-run/node';
 import ReactPDF from '@react-pdf/renderer';
 import { StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getStoreFront } from '~/use-cases/storefront.server';
@@ -10,7 +10,7 @@ import { Category } from '~/use-cases/contracts/Category';
 import { authenticatedUser } from '~/core/authentication.server';
 import { marketIdentifiersForUser } from '~/use-cases/marketIdentifiersForUser';
 
-export const loader: LoaderFunction = async ({ request, params }) => {
+export const loader: LoaderFunction = async ({ request, params }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const path = `/shop/${params.folder}`;
     const { shared } = await getStoreFront(requestContext.host);

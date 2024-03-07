@@ -1,4 +1,4 @@
-import { action as StripAction } from './stripe';
+import { action as StripAction } from './api.webhook.payment.stripe';
 
 /**
  * @deprecated use /stripe instead

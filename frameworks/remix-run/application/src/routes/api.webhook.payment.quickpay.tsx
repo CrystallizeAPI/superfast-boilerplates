@@ -1,17 +1,17 @@
-import { ActionFunction, json } from '@remix-run/node';
+import { ActionFunction, ActionFunctionArgs, json } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
-import receivePaymentEvent from '~/use-cases/payments/stripe/receivePaymentEvent';
+import receivePaymentEvent from '~/use-cases/payments/quickpay/receivePaymentEvent';
 import { cartWrapperRepository } from '~/use-cases/services.server';
 
-export const action: ActionFunction = async ({ request }) => {
+export const action: ActionFunction = async ({ request }: ActionFunctionArgs) => {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const body = await request.json();
     const data = await receivePaymentEvent(
         cartWrapperRepository,
         storefront.apiClient,
-        request.headers.get('stripe-signature') as string,
+        request.headers.get('Quickpay-Checksum-Sha256') as string,
         body,
         storefront.config,
     );
