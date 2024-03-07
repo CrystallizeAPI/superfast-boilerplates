@@ -1,4 +1,4 @@
-import { HeadersFunction, LoaderFunction } from '@remix-run/node';
+import { HeadersFunction, LoaderFunction, LoaderFunctionArgs } from '@remix-run/node';
 import { HttpCacheHeaderTaggerFromLoader, StoreFrontAwaretHttpCacheHeaderTagger } from '~/use-cases/http/cache';
 import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
@@ -7,7 +7,7 @@ export const headers: HeadersFunction = ({ loaderHeaders }) => {
     return HttpCacheHeaderTaggerFromLoader(loaderHeaders).headers;
 };
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader: LoaderFunction = async ({ request }: LoaderFunctionArgs) => {
     const requestContext = getContext(request);
     const { shared } = await getStoreFront(requestContext.host);
     return new Response(
