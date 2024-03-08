@@ -9,7 +9,7 @@ on:
 jobs:
     lint:
         name: 💄 Prettier
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-4vcpu-ubuntu-2204
         steps:
             - name: ⬇️ Checkout repo
               uses: actions/checkout@v3
@@ -19,7 +19,7 @@ jobs:
                   args: --check . --ignore-path tools/cs/.prettierignore  --config tools/cs/.prettierrc.json
     test:
         name: 🧪 Tests
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-4vcpu-ubuntu-2204
         steps:
             - name: 🛑 Cancel Previous Runs
               uses: styfle/cancel-workflow-action@0.11.0
@@ -50,7 +50,7 @@ jobs:
     sync:
         name: 🍿 Sync
         if: github.event_name == 'push' && github.ref_name == 'main'
-        runs-on: ubuntu-latest
+        runs-on: blacksmith-4vcpu-ubuntu-2204
         needs: [lint, test]
         steps:
             - name: 🛑 Cancel Previous Runs
