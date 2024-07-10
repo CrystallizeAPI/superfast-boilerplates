@@ -1,7 +1,6 @@
 import { CartItem } from '@crystallize/node-service-api-request-handlers';
 import displayPriceFor, { DisplayPrice } from '~/use-cases/checkout/pricing';
 import { Price as CrystallizePrice } from '../lib/pricing/pricing-component';
-import { DataMapper } from '~/use-cases/mapper';
 import { useAppContext } from '../app-context/provider';
 import { ProductVariant } from '~/use-cases/contracts/ProductVariant';
 
@@ -36,7 +35,7 @@ export const DiscountedPrice: React.FC<{
     return (
         <div>
             {discountPrice && discountPrice < defaultPrice ? (
-                <div className="flex flex-wrap  flex-col">
+                <div className="flex flex-wrap flex-col">
                     <div className={priceSize[size as keyof typeof priceSize].previous}>
                         <CrystallizePrice currencyCode={currency.code}>{defaultPrice}</CrystallizePrice>
                     </div>
@@ -82,29 +81,23 @@ export const Price: React.FC<{ variant: ProductVariant; size?: string }> = ({ va
 };
 
 export const CartItemPrice: React.FC<{
-    item: CartItem;
-    saving: any;
-    size?: string;
-}> = ({ item, saving, size = 'small' }) => {
-    const mapper = DataMapper();
+    total: number;
+    discount?: number;
+}> = ({ total, discount }) => {
     const { state, _t } = useAppContext();
+    const {
+        currency: { code: currencyCode },
+    } = state;
     return (
-        <>
-            <Price variant={mapper.API.Object.APIProductVariantToProductVariant(item.variant)} size={size} />
+        <div className="flex flex-col ">
+            {discount && discount > 0 && (
+                <div className="text-sm font-semibold text-green2">
+                    {_t('cart.discount')}: <CrystallizePrice currencyCode={currencyCode}>{discount}</CrystallizePrice>
+                </div>
+            )}
             <div>
-                {_t('total')}:{' '}
-                <CrystallizePrice currencyCode={state.currency.code}>{item.price.gross}</CrystallizePrice>
-                {saving && (
-                    <>
-                        <del className="text-red mx-2">
-                            <CrystallizePrice currencyCode={state.currency.code}>
-                                {item.price.net + saving.amount}
-                            </CrystallizePrice>
-                        </del>
-                        <small>({saving.quantity} for free!)</small>
-                    </>
-                )}
+                {_t('total')}: <CrystallizePrice currencyCode={currencyCode}>{total}</CrystallizePrice>
             </div>
-        </>
+        </div>
     );
 };

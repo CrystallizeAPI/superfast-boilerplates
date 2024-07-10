@@ -12,9 +12,9 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
     const user = await authenticatedUser(request);
 
     return privateJson(
-        await handleCart(storefront.config, storefront.apiClient, requestContext, {
-            ...body,
-            user,
+        await handleCart(body, {
+            apiClient: storefront.apiClient,
         }),
+        user,
     );
 };

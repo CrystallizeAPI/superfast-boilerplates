@@ -1,3 +1,4 @@
+import { ClientInterface } from '@crystallize/js-api-client';
 import { TStoreFrontConfig } from '@crystallize/js-storefrontaware-utils';
 import {
     CartWrapper,
@@ -5,9 +6,16 @@ import {
     handleVippsInitiateExpressCheckoutRequestPayload,
 } from '@crystallize/node-service-api-request-handlers';
 import { buildLanguageMarketAwareLink } from '~/use-cases/LanguageAndMarket';
+import { Cart } from '~/use-cases/contracts/RemoteCart';
+import { fetchCart } from '~/use-cases/crystallize/read/fetchCart';
 import { RequestContext } from '~/use-cases/http/utils';
 
-export default async (cartWrapper: CartWrapper, context: RequestContext, storeFrontConfig: TStoreFrontConfig) => {
+type Deps = {
+    storeFrontConfig: TStoreFrontConfig;
+    apiClient: ClientInterface;
+};
+
+export default async (cart: Cart, context: RequestContext, { storeFrontConfig, apiClient }: Deps) => {
     const credentials: VippsAppCredentials = {
         origin: process.env.VIPPS_ORIGIN ?? storeFrontConfig?.configuration?.VIPPS_ORIGIN ?? '',
         clientId: process.env.VIPPS_CLIENT_ID ?? storeFrontConfig?.configuration?.VIPPS_CLIENT_ID ?? '',
@@ -16,20 +24,17 @@ export default async (cartWrapper: CartWrapper, context: RequestContext, storeFr
         subscriptionKey:
             process.env.VIPPS_SUBSCRIPTION_KEY ?? storeFrontConfig?.configuration?.VIPPS_SUBSCRIPTION_KEY ?? '',
     };
-    const orderCartUrl = buildLanguageMarketAwareLink(
-        `/order/cart/${cartWrapper.cartId}`,
-        context.language,
-        context.market,
-    );
+    const orderCartUrl = buildLanguageMarketAwareLink(`/order/cart/${cart.id}`, context.language, context.market);
 
     const webhookCallbackUrl = `/api/webhook/payment/vipps`;
 
     return await handleVippsInitiateExpressCheckoutRequestPayload(
-        { cartId: cartWrapper.cartId },
+        { cartId: cart.id },
         {
             ...credentials,
-            fetchCart: async () => {
-                return cartWrapper.cart;
+            //@ts-expect-error
+            fetchCart: async (cartId: string) => {
+                return cart;
             },
             callbackPrefix: `${context.baseUrl}${webhookCallbackUrl}`,
             consentRemovalPrefix: `${context.baseUrl}${buildLanguageMarketAwareLink(

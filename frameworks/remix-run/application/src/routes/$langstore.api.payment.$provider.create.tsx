@@ -10,19 +10,26 @@ import { default as initiateMontonioPayPayment } from '~/use-cases/payments/mont
 import { default as initiateAdyenPayment } from '~/use-cases/payments/adyen/initiatePayment';
 import { default as initiateVippsPayment } from '~/use-cases/payments/vipps/initiatePayment';
 import { default as initiateDinteroPayment } from '~/use-cases/payments/dintero/initiatePayment';
+import { fetchCart } from '~/use-cases/crystallize/read/fetchCart';
+import { Cart } from '~/use-cases/contracts/RemoteCart';
+import remoteCartToPaymentCart from '~/use-cases/mapper/API/remoteCartToPaymentCart';
 
 export const action: ActionFunction = async ({ request, params }: ActionFunctionArgs) => {
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const body = await request.json();
     const cartId = body.cartId as string;
-    const cartWrapper = await cartWrapperRepository.find(cartId);
-    if (!cartWrapper) {
+    const cart = await fetchCart(cartId, {
+        apiClient: storefront.apiClient,
+    });
+    if (!cart) {
         throw {
             message: `Cart '${cartId}' does not exist.`,
             status: 404,
         };
     }
+
+    const paymentCart = await remoteCartToPaymentCart(cart as Cart);
 
     const providers = {
         klarna: initiateKlarnaPayment,
@@ -36,8 +43,8 @@ export const action: ActionFunction = async ({ request, params }: ActionFunction
     };
 
     try {
-        const data = await providers[params.provider as keyof typeof providers](
-            cartWrapper,
+        const data = await (providers[params.provider as keyof typeof providers] as any)(
+            paymentCart,
             requestContext,
             body,
             storefront.config,

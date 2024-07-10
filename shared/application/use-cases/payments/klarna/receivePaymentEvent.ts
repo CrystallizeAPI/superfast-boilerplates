@@ -8,22 +8,24 @@ import {
 } from '@crystallize/node-service-api-request-handlers';
 import pushOrder from '../../crystallize/write/pushOrder';
 import { getKlarnaOrderInfos, getKlarnaVariables } from './utils';
+import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
 
 export default async (
-    cartWrapperRepository: CartWrapperRepository,
     apiClient: ClientInterface,
     cartId: string,
     payload: any,
     storeFrontConfig: TStoreFrontConfig,
 ) => {
-    const cartWrapper = await cartWrapperRepository.find(cartId);
-    if (!cartWrapper) {
+    const orderIntent = await fetchOrderIntent(cartId, {
+        apiClient,
+    });
+    if (!orderIntent) {
         throw {
-            message: `Cart '${cartId}' does not exist.`,
+            message: `Order intent for cart ${cartId} not found`,
             status: 404,
         };
     }
-    const currency = cartWrapper.cart.total.currency.toUpperCase();
+    const currency = orderIntent.cart.total.currency.toUpperCase();
     const { locale, origin } = getKlarnaVariables(currency);
     await handleKlarnaPaymentWebhookRequestPayload(payload, {
         cartId,
@@ -35,17 +37,21 @@ export default async (
             password: process.env.KLARNA_PASSWORD ?? storeFrontConfig.configuration?.KLARNA_PASSWORD ?? '',
         },
         fetchCart: async () => {
-            return cartWrapper.cart;
+            return orderIntent.cart;
         },
         handleEvent: async (orderResponse: KlarnaOrderResponse) => {
-            const orderCreatedConfirmation = await pushOrder(cartWrapperRepository, apiClient, cartWrapper, {
-                //@ts-ignore
-                provider: 'klarna',
-                klarna: {
-                    orderId: orderResponse.order_id,
-                    merchantReference1: cartId,
+            const orderCreatedConfirmation = await pushOrder(
+                orderIntent,
+                {
+                    //@ts-ignore
+                    provider: 'klarna',
+                    klarna: {
+                        orderId: orderResponse.order_id,
+                        merchantReference1: cartId,
+                    },
                 },
-            });
+                { apiClient },
+            );
             return orderCreatedConfirmation;
         },
         confirmPaymentArguments: (cart: Cart) => {
