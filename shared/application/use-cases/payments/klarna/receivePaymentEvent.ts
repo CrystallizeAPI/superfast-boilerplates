@@ -9,6 +9,7 @@ import {
 import pushOrder from '../../crystallize/write/pushOrder';
 import { getKlarnaOrderInfos, getKlarnaVariables } from './utils';
 import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
+import orderIntentToPaymentCart from '~/use-cases/mapper/API/orderIntentToPaymentCart';
 
 export default async (
     apiClient: ClientInterface,
@@ -25,7 +26,7 @@ export default async (
             status: 404,
         };
     }
-    const currency = orderIntent.cart.total.currency.toUpperCase();
+    const currency = orderIntent.total!.currency.toUpperCase();
     const { locale, origin } = getKlarnaVariables(currency);
     await handleKlarnaPaymentWebhookRequestPayload(payload, {
         cartId,
@@ -37,7 +38,8 @@ export default async (
             password: process.env.KLARNA_PASSWORD ?? storeFrontConfig.configuration?.KLARNA_PASSWORD ?? '',
         },
         fetchCart: async () => {
-            return orderIntent.cart;
+            const paymentCart = await orderIntentToPaymentCart(orderIntent);
+            return paymentCart.cart;
         },
         handleEvent: async (orderResponse: KlarnaOrderResponse) => {
             const orderCreatedConfirmation = await pushOrder(

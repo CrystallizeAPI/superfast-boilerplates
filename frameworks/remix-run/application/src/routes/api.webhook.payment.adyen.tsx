@@ -8,7 +8,7 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
     const requestContext = getContext(request);
     const { secret: storefront } = await getStoreFront(requestContext.host);
     const body = await request.json();
-    const data = await receivePaymentEvent(cartWrapperRepository, storefront.apiClient, body, storefront.config);
+    const data = await receivePaymentEvent(storefront.apiClient, body);
 
     return json(data);
 };

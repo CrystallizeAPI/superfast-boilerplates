@@ -2,15 +2,11 @@ import { ClientInterface, placeCart } from '@crystallize/js-api-client';
 import { fetchCart } from '../crystallize/read/fetchCart';
 import { setCartCustomer } from '../crystallize/write/editCart';
 import { EnumType } from 'json-to-graphql-query';
+import { Cart } from '../contracts/RemoteCart';
 
 type Deps = {
     apiClient: ClientInterface;
 };
-
-enum AddressType {
-    Billing = 'billing',
-    Shipping = 'shipping',
-}
 
 export default async (body: any, customer: any, { apiClient }: Deps) => {
     const isGuest = customer?.isGuest || false;
@@ -41,5 +37,5 @@ export default async (body: any, customer: any, { apiClient }: Deps) => {
         return await fetchCart(placedCart.id, { apiClient });
     }
 
-    return {} as any;
+    return {} as Cart;
 };

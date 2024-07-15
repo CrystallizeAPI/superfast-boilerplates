@@ -1,6 +1,6 @@
 import { ClientInterface } from '@crystallize/js-api-client';
+import { EnumType } from 'json-to-graphql-query';
 import { handleAdyenWebhookRequestPayload } from '@crystallize/node-service-api-request-handlers';
-import { cartWrapperRepository } from '~/use-cases/services.server';
 import pushOrder from '../../crystallize/write/pushOrder';
 import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
 
@@ -36,8 +36,7 @@ export default async (apiClient: ClientInterface, payload: any) => {
                         const orderCreatedConfirmation = await pushOrder(
                             orderIntent,
                             {
-                                //@ts-ignore
-                                provider: 'custom',
+                                provider: new EnumType('custom'),
                                 custom: {
                                     properties: [
                                         {

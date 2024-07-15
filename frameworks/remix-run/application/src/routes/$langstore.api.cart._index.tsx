@@ -15,6 +15,5 @@ export const action: ActionFunction = async ({ request }: ActionFunctionArgs) =>
         await handleCart(body, {
             apiClient: storefront.apiClient,
         }),
-        user,
     );
 };

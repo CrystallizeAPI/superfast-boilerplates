@@ -3,6 +3,8 @@ import { getContext } from '~/use-cases/http/utils';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import initiateBuyNowPayment from '~/use-cases/payments/vipps/initiateBuyNowPayment';
 import handlePlaceCart from '~/use-cases/checkout/handlePlaceCart';
+import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
+import orderIntentToPaymentCart from '~/use-cases/mapper/API/orderIntentToPaymentCart';
 
 export const action: ActionFunction = async ({ request, params }: ActionFunctionArgs) => {
     if (params.provider !== 'vipps') {
@@ -15,10 +17,23 @@ export const action: ActionFunction = async ({ request, params }: ActionFunction
         apiClient: storefront.apiClient,
     });
     if (cart) {
-        const data = await initiateBuyNowPayment(cart, requestContext, {
+        const orderIntent = await fetchOrderIntent(cart.id, {
+            apiClient: storefront.apiClient,
+        });
+        if (!orderIntent) {
+            throw {
+                message: `Order intent for cart ${cart.id} not found`,
+                status: 404,
+            };
+        }
+
+        const paymentCart = await orderIntentToPaymentCart(orderIntent);
+        const data = await initiateBuyNowPayment(paymentCart, requestContext, {
             storeFrontConfig: storefront.config,
             apiClient: storefront.apiClient,
         });
         return json(data);
     }
+
+    return json({ error: 'Failed to handle cart' }, { status: 500 });
 };

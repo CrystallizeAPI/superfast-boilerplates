@@ -16,10 +16,16 @@ export default async (
     { apiClient }: Deps,
     metadata?: Record<string, string>,
 ): Promise<OrderCreatedConfirmation> => {
-    // const extendedMetaData: Record<string, string> = {
-    //     'Additional info': cartWrapper?.customer?.additionalInfo || '',
-    //     ...metadata,
-    // };
+    orderIntent.payment = [payment];
+    orderIntent.meta = [
+        ...(orderIntent.meta || []),
+        ...(metadata
+            ? Object.entries(metadata).map(([key, value]) => ({
+                  key,
+                  value,
+              }))
+            : []),
+    ];
 
     const pusher = createOrderPusher(apiClient);
 

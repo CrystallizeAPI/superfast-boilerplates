@@ -1,9 +1,7 @@
 import { ActionFunction, ActionFunctionArgs, json } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
-import { cartWrapperRepository } from '~/use-cases/services.server';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import pushCrystalPaidOrder from '~/use-cases/crystallize/write/pushCrystalPaidOrder';
-import { fetchCart } from '~/use-cases/crystallize/read/fetchCart';
 import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
 
 export const action: ActionFunction = async ({ request, params }: ActionFunctionArgs) => {

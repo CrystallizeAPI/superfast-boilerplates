@@ -1,7 +1,6 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 import { TStoreFrontConfig } from '@crystallize/js-storefrontaware-utils';
 import { handleDinteroVerificationPayload } from '@crystallize/node-service-api-request-handlers';
-import { cartWrapperRepository } from '~/use-cases/services.server';
 import pushOrder from '../../crystallize/write/pushOrder';
 import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
 
@@ -25,27 +24,32 @@ export default async (apiClient: ClientInterface, payload: any, storeFrontConfig
                     status: 404,
                 };
             }
-            //@todo: add customer details
+
             //in case shipping is enabled, customer can change shipping address
-            // if (event.shipping_option) {
-            //     orderIntent.customer = {
-            //         ...orderIntent.customer,
-            //         email: event.shipping_address.email,
-            //         firstname: event.shipping_address.first_name,
-            //         lastname: event.shipping_address.last_name,
-            //         customerIdentifier: event.shipping_address.email,
-            //         streetAddress: event.shipping_address.address_line,
-            //         city: event.shipping_address.postal_place,
-            //         country: event.shipping_address.country,
-            //         zipCode: event.shipping_address.postal_code,
-            //     };
-            // }
+            if (event.shipping_option) {
+                orderIntent.customer = {
+                    ...orderIntent.customer,
+                    firstName: event.shipping_address.first_name,
+                    lastName: event.shipping_address.last_name,
+                    identifier: event.shipping_address.email,
+                    addresses: [
+                        {
+                            //@ts-expect-error
+                            type: 'billing',
+                            street: event.shipping_address.address_line,
+                            city: event.shipping_address.postal_place,
+                            country: event.shipping_address.country,
+                            postalCode: event.shipping_address.postal_code,
+                        },
+                    ],
+                };
+            }
             switch (eventName) {
                 case 'AUTHORIZED':
                     const orderCreatedConfirmation = await pushOrder(
                         orderIntent,
                         {
-                            //@ts-ignore
+                            //@ts-expect-error
                             provider: 'custom',
                             custom: {
                                 properties: [
