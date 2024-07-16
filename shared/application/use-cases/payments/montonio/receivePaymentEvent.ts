@@ -7,6 +7,8 @@ import {
 import pushOrder from '../../crystallize/write/pushOrder';
 import createShipment from './createShipment';
 import fetchShipmentLabelUrl from './fetchShipmentLabelUrl';
+import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
+import orderIntentToPaymentCart from '~/use-cases/mapper/API/orderIntentToPaymentCart';
 
 export default async (
     cartWrapperRepository: CartWrapperRepository,
@@ -23,17 +25,19 @@ export default async (
                 const cartId = event.merchant_reference;
                 switch (event.status) {
                     case 'finalized':
-                        const cartWrapper = await cartWrapperRepository.find(cartId);
-                        if (!cartWrapper) {
+                        const orderIntent = await fetchOrderIntent(cartId, {
+                            apiClient,
+                        });
+                        if (!orderIntent) {
                             throw {
-                                message: `Cart '${cartId}' does not exist.`,
+                                message: `Order intent for cart ${cartId} not found`,
                                 status: 404,
                             };
                         }
-
+                        const paymentCart = await orderIntentToPaymentCart(orderIntent);
                         // if we have a pickup point we will create a shipment and printing label and add it to the order
-                        const shipment = await createShipment(cartWrapper, storeFrontConfig).catch(console.log);
-                        const shipmentLabelUrl = await fetchShipmentLabelUrl(cartWrapper, storeFrontConfig).catch(
+                        const shipment = await createShipment(paymentCart, storeFrontConfig).catch(console.log);
+                        const shipmentLabelUrl = await fetchShipmentLabelUrl(paymentCart, storeFrontConfig).catch(
                             console.log,
                         );
 
@@ -56,9 +60,7 @@ export default async (
                             },
                         ];
                         const orderCreatedConfirmation = await pushOrder(
-                            cartWrapperRepository,
-                            apiClient,
-                            cartWrapper,
+                            orderIntent,
                             {
                                 //@ts-ignore
                                 provider: 'custom',
@@ -70,6 +72,7 @@ export default async (
                                 'Shipment UUID': shipment.uuid,
                                 'Shipment Label': shipmentLabelUrl,
                             },
+                            { apiClient },
                         );
                         return orderCreatedConfirmation;
                 }

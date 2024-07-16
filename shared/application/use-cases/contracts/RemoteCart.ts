@@ -16,4 +16,5 @@ export type Cart = {
         currency: string;
     };
     state: 'cart' | 'placed' | 'ordered';
+    orderId?: string;
 };

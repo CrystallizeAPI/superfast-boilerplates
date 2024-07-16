@@ -2,7 +2,6 @@ import { ClientInterface } from '@crystallize/js-api-client';
 import { TStoreFrontConfig } from '@crystallize/js-storefrontaware-utils';
 import {
     Cart,
-    CartWrapperRepository,
     handleKlarnaPaymentWebhookRequestPayload,
     KlarnaOrderResponse,
 } from '@crystallize/node-service-api-request-handlers';
