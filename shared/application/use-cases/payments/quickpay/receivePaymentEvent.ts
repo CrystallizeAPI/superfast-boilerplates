@@ -1,14 +1,10 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 import { TStoreFrontConfig } from '@crystallize/js-storefrontaware-utils';
-import {
-    CartWrapperRepository,
-    handleQuickPayPaymentUpdateWebhookRequestPayload,
-} from '@crystallize/node-service-api-request-handlers';
+import { handleQuickPayPaymentUpdateWebhookRequestPayload } from '@crystallize/node-service-api-request-handlers';
 import pushOrder from '../../crystallize/write/pushOrder';
 import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
 
 export default async (
-    cartWrapperRepository: CartWrapperRepository,
     apiClient: ClientInterface,
     signature: string,
     payload: any,

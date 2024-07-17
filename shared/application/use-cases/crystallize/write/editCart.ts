@@ -15,11 +15,13 @@ export const hydrateCart = async (
     items: Array<{ sku: string; quantity: number }>,
     { apiClient }: Deps,
     cartId?: string,
+    markets?: string[],
 ): Promise<Cart | undefined> => {
     const input: Input = {
         items: items,
         context: {
             price: {
+                markets,
                 selectedVariantIdentifier: 'sales',
                 fallbackVariantIdentifiers: ['default'],
                 compareAtVariantIdentifier: 'default',

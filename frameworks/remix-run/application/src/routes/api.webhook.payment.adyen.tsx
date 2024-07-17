@@ -1,6 +1,5 @@
 import { ActionFunction, ActionFunctionArgs, json } from '@remix-run/node';
 import { getContext } from '~/use-cases/http/utils';
-import { cartWrapperRepository } from '~/use-cases/services.server';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import receivePaymentEvent from '~/use-cases/payments/adyen/receivePaymentEvent';
 

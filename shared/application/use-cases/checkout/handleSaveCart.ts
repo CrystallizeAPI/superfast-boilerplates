@@ -1,5 +1,4 @@
 import { addSkuItem, ClientInterface, removeCartItem } from '@crystallize/js-api-client';
-import { RequestContext } from '../http/utils';
 import { fetchCart } from '../crystallize/read/fetchCart';
 import { hydrateCart } from '../crystallize/write/editCart';
 
@@ -7,7 +6,7 @@ type Deps = {
     apiClient: ClientInterface;
 };
 
-export default async (body: any, { apiClient }: Deps) => {
+export default async (body: any, { apiClient }: Deps, markets?: string[]) => {
     const cartId = body?.cartId;
     const cart = cartId ? await fetchCart(cartId, { apiClient }) : undefined;
 
@@ -17,7 +16,7 @@ export default async (body: any, { apiClient }: Deps) => {
     }));
 
     if (!cart || cart?.state === 'placed') {
-        return await hydrateCart(localCartItems, { apiClient });
+        return await hydrateCart(localCartItems, { apiClient }, '', markets);
     } else {
         const remoteCartItems = cart.items.map((item) => ({
             sku: item.variant.sku,

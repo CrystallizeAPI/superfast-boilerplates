@@ -1,21 +1,13 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 import { TStoreFrontConfig } from '@crystallize/js-storefrontaware-utils';
-import {
-    CartWrapperRepository,
-    handleMontonioPaymentUpdateWebhookRequestPayload,
-} from '@crystallize/node-service-api-request-handlers';
+import { handleMontonioPaymentUpdateWebhookRequestPayload } from '@crystallize/node-service-api-request-handlers';
 import pushOrder from '../../crystallize/write/pushOrder';
 import createShipment from './createShipment';
 import fetchShipmentLabelUrl from './fetchShipmentLabelUrl';
 import { fetchOrderIntent } from '~/use-cases/crystallize/read/fetchOrderIntent';
 import orderIntentToPaymentCart from '~/use-cases/mapper/API/orderIntentToPaymentCart';
 
-export default async (
-    cartWrapperRepository: CartWrapperRepository,
-    apiClient: ClientInterface,
-    token: string,
-    storeFrontConfig: TStoreFrontConfig,
-) => {
+export default async (apiClient: ClientInterface, token: string, storeFrontConfig: TStoreFrontConfig) => {
     return await handleMontonioPaymentUpdateWebhookRequestPayload(
         {},
         {

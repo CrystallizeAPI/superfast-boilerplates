@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getContext } from '~/use-cases/http/utils';
-import { cartWrapperRepository } from '~/use-cases/services.server';
 import { getStoreFront } from '~/use-cases/storefront.server';
 import { default as initiateKlarnaPayment } from '~/use-cases/payments/klarna/initiatePayment';
 import { default as initiateStripePayment } from '~/use-cases/payments/stripe/initiatePayment';
