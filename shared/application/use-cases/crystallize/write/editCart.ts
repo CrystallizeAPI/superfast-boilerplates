@@ -22,6 +22,7 @@ export const hydrateCart = async (
         context: {
             price: {
                 markets,
+                decimals: 2,
                 selectedVariantIdentifier: 'sales',
                 fallbackVariantIdentifiers: ['default'],
                 compareAtVariantIdentifier: 'default',

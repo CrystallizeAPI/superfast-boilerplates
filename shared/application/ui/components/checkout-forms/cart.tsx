@@ -34,13 +34,8 @@ export const CheckoutCart: React.FC = () => {
                                         {item.variant.name} x {item.quantity}
                                     </p>
                                     <CartItemPrice
-                                        discount={
-                                            item.price?.discounts
-                                                ? item.price.discounts.reduce((memo: number, discount: any) => {
-                                                      return memo + (discount?.amount || 0)!;
-                                                  }, 0)
-                                                : 0
-                                        }
+                                        discount={item.price?.discounts}
+                                        variantPrice={item.variant?.price?.gross}
                                         total={item.price?.gross}
                                     />
                                 </div>

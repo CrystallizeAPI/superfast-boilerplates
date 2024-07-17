@@ -8,7 +8,7 @@ import { Image } from '@crystallize/reactjs-components';
 import trashIcon from '~/assets/trashIcon.svg';
 import { Price as CrystallizePrice } from '../lib/pricing/pricing-component';
 import { useAppContext } from '../app-context/provider';
-import { CartItemPrice } from './price';
+import { calculateDiscounts, CartItemPrice } from './price';
 import { CartItem } from '@crystallize/node-service-api-request-handlers';
 import { VoucherForm } from './voucher';
 import { Voucher } from '~/use-cases/contracts/Voucher';
@@ -50,12 +50,6 @@ export const HydratedCart: React.FC = () => {
     const { items, total } = remoteCart || {};
     const { state: contextState, path, _t } = useAppContext();
     //const voucher = remoteCart?.extra?.voucher as Voucher | undefined;
-
-    const calculateDiscounts = (discounts: any) => {
-        return discounts.reduce((memo: number, discount: any) => {
-            return memo + (discount?.amount || 0)!;
-        }, 0);
-    };
 
     if (isEmpty()) {
         return (
@@ -111,8 +105,10 @@ export const HydratedCart: React.FC = () => {
                                         <div className="flex flex-col">
                                             <p className="text-xl font-semibold w-full">{item.variant.name}</p>
                                             <CartItemPrice
-                                                discount={
-                                                    item.price?.discounts ? calculateDiscounts(item.price.discounts) : 0
+                                                discount={item.price?.discounts}
+                                                variantPrice={
+                                                    //@ts-expect-error need to change the type of variantPrice
+                                                    item.variant?.price?.gross
                                                 }
                                                 total={item.price?.gross}
                                             />
