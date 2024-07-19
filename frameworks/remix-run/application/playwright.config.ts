@@ -18,6 +18,7 @@ process.env.CRYSTALLIZE_ACCESS_TOKEN_SECRET = process.env.PLAYWRIGHT_ACCESS_TOKE
 process.env.CRYSTAL_PAYMENTS = 'coin,card';
 process.env.HTTP_CACHE_SERVICE = 'varnish';
 process.env.JWT_SECRET = 'xXx';
+process.env.API_URL = 'https://pim.crystallize.com';
 
 const config: PlaywrightTestConfig = {
     testDir: './tests',

@@ -89,8 +89,8 @@ test.describe('Checkout flow', () => {
         // Navigate to the checkout flow
         await page.getByTestId('checkout-button').click();
 
-        await page.waitForResponse(async (response: Response) =>
-            response.url().includes('api/cart') ? response.status() === 200 : false,
+        await page.waitForResponse(
+            async (response: Response) => response.url().includes('api/cart') && response.status() === 200,
         );
 
         // Make sure cartId is present in the local storage
@@ -119,9 +119,9 @@ test.describe('Checkout flow', () => {
         // Navigate to next step - payment
         await page.getByTestId('checkout-next-step-button').click();
 
-        if (!process.env.PLAYWRIGHT_ACCESS_TOKEN_ID) {
-            return;
-        }
+        // if (!process.env.PLAYWRIGHT_ACCESS_TOKEN_ID) {
+        // 	return;
+        // }
 
         // Select the Crystal coin payment method
         await page.getByTestId('crystal-coin-payment-button').click();
@@ -130,7 +130,7 @@ test.describe('Checkout flow', () => {
         await page.getByTestId('order-placed').waitFor({ state: 'visible' });
 
         // Get the order id
-        orderId = await page.getByTestId('guest-order-id"]').textContent();
+        orderId = await page.getByTestId('guest-order-id').textContent();
 
         // Wait until the order appears in the API
         while (retryCount < MAX_RETRY_COUNT) {
