@@ -43,8 +43,8 @@ jobs:
                   cd frameworks/remix-run && make tests
               timeout-minutes: 30
               env:
-                  PLAYWRIGHT_ACCESS_TOKEN_ID: '${{ secrets.CRYSTALLIZE_ACCESS_TOKEN_ID }}'
-                  PLAYWRIGHT_ACCESS_TOKEN_SECRET: '${{ secrets.CRYSTALLIZE_ACCESS_TOKEN_SECRET }}'
+                  PLAYWRIGHT_ACCESS_TOKEN_ID: '${{ secrets.PLAYWRIGHT_ACCESS_TOKEN_ID }}'
+                  PLAYWRIGHT_ACCESS_TOKEN_SECRET: '${{ secrets.PLAYWRIGHT_ACCESS_TOKEN_SECRET }}'
                   API_URL: 'https://pim.crystallize.com'
 
     sync:
