@@ -7,7 +7,7 @@
     "scripts": {
         "build": "npm run build:css && remix build",
         "build:css": "tailwindcss -c tailwind.config.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.css",
-        "dev": "remix dev",
+        "dev": "remix vite:dev",
         "dev:css": "tailwindcss -c tailwind.config.js -w -i ./src/styles/index.css -o ./src/styles/tailwind.css",
         "start": "remix-serve ./build/index.js",
         "test": "playwright test",
@@ -62,7 +62,9 @@
         "concurrently": "^7.6",
         "postcss": "^8.4.20",
         "tailwindcss": "^3.4.1",
-        "typescript": "^5.3.3"
+        "typescript": "^5.3.3",
+        "vite": "^5.4.0",
+        "vite-tsconfig-paths": "^5.0.1"
     },
     "overrides": {
         "@react-pdf/renderer": {
