@@ -8,9 +8,10 @@ type Deps = {
 
 type Input = {
     items: Array<{ sku: string; quantity: number }>;
-    context: Record<string, unknown>;
+    context: Cart['context'];
     id?: string;
 };
+
 export const hydrateCart = async (
     items: Array<{ sku: string; quantity: number }>,
     { apiClient }: Deps,
@@ -27,10 +28,13 @@ export const hydrateCart = async (
                 selectedVariantIdentifier: 'sales',
                 fallbackVariantIdentifiers: ['default'],
                 compareAtVariantIdentifier: 'default',
-                voucherCode,
             },
         },
     };
+
+    if (voucherCode) {
+        input.context.price.voucherCode = voucherCode;
+    }
 
     if (cartId) {
         input.id = cartId;
@@ -44,6 +48,7 @@ export const hydrateCart = async (
                 },
                 id: true,
                 state: true,
+                context: true,
                 items: {
                     quantity: true,
                     variant: {

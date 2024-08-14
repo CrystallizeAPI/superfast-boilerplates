@@ -15,6 +15,16 @@ export type Cart = {
         discounts: number[];
         currency: string;
     };
+    context: {
+        price: {
+            markets?: string[];
+            decimals: number;
+            selectedVariantIdentifier: string;
+            fallbackVariantIdentifiers: string[];
+            compareAtVariantIdentifier: string;
+            voucherCode?: string;
+        };
+    };
     state: 'cart' | 'placed' | 'ordered';
     orderId?: string;
 };

@@ -53,7 +53,8 @@
         "immutable": "You have initiated, finalized or cancelled a payment, this version of your cart is therefore locked.",
         "clone": "Clone previous cart",
         "voucherCode": "Voucher code",
-        "useVoucher": "Use voucher"
+        "useVoucher": "Use voucher",
+        "voucherApplied": "Voucher applied"
     },
     "dimensions": "Dimensions",
     "specifications": "Manuals and specifications",

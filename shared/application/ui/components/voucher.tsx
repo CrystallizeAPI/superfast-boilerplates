@@ -9,8 +9,11 @@ import { Input } from './input';
 
 export const VoucherForm: React.FC = () => {
     const { cart: localCart, setVoucher } = useLocalCart();
-    const { loading } = useRemoteCart();
+    const { loading, remoteCart } = useRemoteCart();
     const [voucherValue, setVoucherValue] = useState(localCart?.extra?.voucher ?? '');
+
+    const isVoucherValid = remoteCart?.context?.price?.voucherCode ? true : false;
+
     const { _t } = useAppContext();
 
     return (
@@ -50,6 +53,7 @@ export const VoucherForm: React.FC = () => {
                         </button>
                     )}
                 </div>
+                {isVoucherValid ? <div className="text-sm my-2 text-green2">{_t('cart.voucherApplied')}</div> : null}
             </div>
         </ClientOnly>
     );
