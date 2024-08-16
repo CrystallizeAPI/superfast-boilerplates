@@ -54,7 +54,8 @@
         "clone": "Klone forrige handlekurv",
         "voucherCode": "Rabatt code",
         "useVoucher": "Bruk rabatt",
-        "voucherApplied": "Rabatt brukt"
+        "voucherApplied": "Rabatt brukt.",
+        "voucherInvalid": "Rabattkoden er ugyldig."
     },
     "dimensions": "Dimensjoner",
     "specifications": "Manualer og spesifikasjoner",

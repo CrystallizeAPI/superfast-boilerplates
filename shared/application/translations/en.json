@@ -54,7 +54,8 @@
         "clone": "Clone previous cart",
         "voucherCode": "Voucher code",
         "useVoucher": "Use voucher",
-        "voucherApplied": "Voucher applied"
+        "voucherApplied": "Voucher applied.",
+        "voucherInvalid": "Voucher is invalid."
     },
     "dimensions": "Dimensions",
     "specifications": "Manuals and specifications",

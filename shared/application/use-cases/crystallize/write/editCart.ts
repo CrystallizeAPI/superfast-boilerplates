@@ -28,13 +28,10 @@ export const hydrateCart = async (
                 selectedVariantIdentifier: 'sales',
                 fallbackVariantIdentifiers: ['default'],
                 compareAtVariantIdentifier: 'default',
+                voucherCode,
             },
         },
     };
-
-    if (voucherCode) {
-        input.context.price.voucherCode = voucherCode;
-    }
 
     if (cartId) {
         input.id = cartId;
@@ -48,7 +45,6 @@ export const hydrateCart = async (
                 },
                 id: true,
                 state: true,
-                context: true,
                 items: {
                     quantity: true,
                     variant: {

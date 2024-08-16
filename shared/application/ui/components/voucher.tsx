@@ -8,13 +8,20 @@ import { useRemoteCart } from '../hooks/useRemoteCart';
 import { Input } from './input';
 
 export const VoucherForm: React.FC = () => {
-    const { cart: localCart, setVoucher } = useLocalCart();
-    const { loading, remoteCart } = useRemoteCart();
+    const { cart: localCart, setVoucher, validateVoucher } = useLocalCart();
+    const { loading } = useRemoteCart();
     const [voucherValue, setVoucherValue] = useState(localCart?.extra?.voucher ?? '');
-
-    const isVoucherValid = remoteCart?.context?.price?.voucherCode ? true : false;
+    const [showMessage, setShowMessage] = useState('');
 
     const { _t } = useAppContext();
+
+    const checkVoucher = async (voucher: string) => {
+        if (!voucher) return;
+        const checkVoucher = await validateVoucher(voucher);
+        return checkVoucher.isValid
+            ? setShowMessage(_t('cart.voucherApplied'))
+            : setShowMessage(_t('cart.voucherInvalid'));
+    };
 
     return (
         <ClientOnly>
@@ -36,6 +43,7 @@ export const VoucherForm: React.FC = () => {
                         className="bg-[#000] text-[#fff] px-2 py-1 rounded mt-5 text-center h-10"
                         onClick={() => {
                             setVoucher(voucherValue);
+                            checkVoucher(voucherValue);
                         }}
                     >
                         {loading && localCart?.extra?.voucher ? _t('loading') : _t('cart.useVoucher')}
@@ -47,13 +55,14 @@ export const VoucherForm: React.FC = () => {
                             onClick={() => {
                                 setVoucherValue('');
                                 setVoucher('');
+                                setShowMessage('');
                             }}
                         >
                             {_t('delete')}
                         </button>
                     )}
                 </div>
-                {isVoucherValid ? <div className="text-sm my-2 text-green2">{_t('cart.voucherApplied')}</div> : null}
+                {showMessage && <p className="text-sm mt-2 text-[#666]">{showMessage}</p>}
             </div>
         </ClientOnly>
     );

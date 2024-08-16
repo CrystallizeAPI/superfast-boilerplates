@@ -1,6 +1,8 @@
 'use client';
 import { useLocalStorage, writeStorage } from '@rehooks/local-storage';
 import { LocalCart } from '~/use-cases/contracts/LocalCart';
+import { ServiceAPI } from '~/use-cases/service-api';
+import { useAppContext } from '../app-context/provider';
 
 const InitializeEmptyLocalCart = (): LocalCart => {
     return {
@@ -18,6 +20,7 @@ export function useLocalCart() {
             ...cart,
         });
     };
+    const { state: appContextState } = useAppContext();
 
     const isImmutable = () => {
         return cart.state === 'placed';
@@ -105,6 +108,14 @@ export function useLocalCart() {
                     voucher,
                 },
             });
+        },
+        validateVoucher: async (voucher: string) => {
+            const api = ServiceAPI({
+                language: appContextState.language,
+                serviceApiUrl: appContextState.serviceApiUrl,
+            });
+
+            return await api.validateVoucher(voucher);
         },
     };
 }

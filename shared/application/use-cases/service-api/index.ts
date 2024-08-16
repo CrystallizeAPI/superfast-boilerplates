@@ -108,6 +108,10 @@ export const ServiceAPI = ({ locale, language, serviceApiUrl }: ServiceAPIContex
                 withImages: true,
                 extra: cart.extra,
             }),
+        validateVoucher: (voucher: string) =>
+            postJson<any>(serviceApiUrl + '/cart/voucher', {
+                voucher,
+            }),
         // THIS SHOULD BE REMOVED IN A REAL PROJECT
         sendPaidOrderWithCrystalCoin: (cart: LocalCart, customer: Partial<Customer>) =>
             sendPaidOrderWithCrystalCoin(serviceApiUrl, language, cart, customer),

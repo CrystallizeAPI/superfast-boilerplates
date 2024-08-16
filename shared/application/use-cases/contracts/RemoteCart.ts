@@ -15,7 +15,9 @@ export type Cart = {
         discounts: number[];
         currency: string;
     };
-    context: {
+    state: 'cart' | 'placed' | 'ordered';
+    orderId?: string;
+    context?: {
         price: {
             markets?: string[];
             decimals: number;
@@ -25,6 +27,4 @@ export type Cart = {
             voucherCode?: string;
         };
     };
-    state: 'cart' | 'placed' | 'ordered';
-    orderId?: string;
 };

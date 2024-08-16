@@ -14,7 +14,6 @@ export const fetchCart = async (cartId: string, { apiClient }: Deps): Promise<Ca
             },
             id: true,
             state: true,
-            context: true,
             orderId: true,
             customer: {
                 isGuest: true,

@@ -1,6 +1,5 @@
 import { ClientInterface } from '@crystallize/js-api-client';
 import { hydrateCart } from '../crystallize/write/editCart';
-import { validateVoucher } from '../crystallize/read/validateVoucher.server';
 
 type Deps = {
     apiClient: ClientInterface;
@@ -14,23 +13,14 @@ export default async (body: any, { apiClient }: Deps, markets?: string[]) => {
         quantity: item.quantity,
     }));
 
-    const voucher = body.extra?.voucher?.toUpperCase();
-    let validVoucher = null;
-
-    if (voucher) {
-        try {
-            validVoucher = await validateVoucher(voucher, { apiClient });
-        } catch (error) {
-            console.error('Voucher validation failed:', error);
-        }
-    }
+    const voucher = body.extra?.voucher?.toUpperCase() || '';
 
     try {
-        return await hydrateCart(localCartItems, { apiClient }, cartId, markets, validVoucher ? voucher : '');
+        return await hydrateCart(localCartItems, { apiClient }, cartId, markets, voucher);
     } catch (error: any) {
         if (error.message.includes('placed')) {
             console.log('Cart has been placed, creating a new one');
-            return await hydrateCart(localCartItems, { apiClient }, undefined, markets, validVoucher ? voucher : '');
+            return await hydrateCart(localCartItems, { apiClient }, undefined, markets, voucher);
         }
         throw error;
     }
