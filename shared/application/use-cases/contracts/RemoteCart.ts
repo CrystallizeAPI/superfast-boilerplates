@@ -17,4 +17,14 @@ export type Cart = {
     };
     state: 'cart' | 'placed' | 'ordered';
     orderId?: string;
+    context?: {
+        price: {
+            markets?: string[];
+            decimals: number;
+            selectedVariantIdentifier: string;
+            fallbackVariantIdentifiers: string[];
+            compareAtVariantIdentifier: string;
+            voucherCode?: string;
+        };
+    };
 };

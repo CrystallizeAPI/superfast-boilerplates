@@ -8,9 +8,10 @@ type Deps = {
 
 type Input = {
     items: Array<{ sku: string; quantity: number }>;
-    context: Record<string, unknown>;
+    context: Cart['context'];
     id?: string;
 };
+
 export const hydrateCart = async (
     items: Array<{ sku: string; quantity: number }>,
     { apiClient }: Deps,

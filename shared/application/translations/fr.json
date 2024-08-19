@@ -53,7 +53,9 @@
         "immutable": "Vous avez initié, finalisé ou annulé un paiement, cette version de votre caddie est donc bloquée.",
         "clone": "Cloner le caddie précédent",
         "voucherCode": "Bon de réduction",
-        "useVoucher": "Utiliser bon de réduction"
+        "useVoucher": "Utiliser bon de réduction",
+        "voucherApplied": "Bon de réduction appliqué.",
+        "voucherInvalid": "Le bon de réduction est invalide."
     },
     "dimensions": "Dimensions",
     "specifications": "Manuels et caractéristiques",
