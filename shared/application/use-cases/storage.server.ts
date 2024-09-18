@@ -1,13 +1,15 @@
 import * as redis from 'redis';
 import { BackendStorage, StorageOptions } from './contracts/BackendStorage';
+import { config } from 'platformsh-config';
+
 
 function createRedisStorageEngine(dsn: string | undefined, options: StorageOptions = {}): BackendStorage {
     const prefix = options?.prefix ?? '';
     let redisDSN = `${dsn || 'redis://127.0.0.1:6379'}`;
-    const config = require('platformsh-config').config();
-    if (config.isValidPlatform()) {
-        const credentials = config.credentials('redis');
-        redisDSN = `redis://${credentials.host}:${credentials.port}`;
+    const platformConfig = config();
+    if (platformConfig.isValidPlatform()) {
+        const credentials = platformConfig.credentials('redis');
+        const redisDSN = `redis://${credentials.host}:${credentials.port}`;
     }
     const client = redis.createClient({ url: redisDSN });
     client.connect();
