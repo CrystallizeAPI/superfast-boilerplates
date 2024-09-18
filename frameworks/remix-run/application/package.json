@@ -4,6 +4,7 @@
     "description": "Crystallize Furniture v2 Remix Boilerplate",
     "license": "MIT",
     "sideEffects": false,
+    "type": "module",
     "scripts": {
         "build": "npm run build:css && remix build",
         "build:css": "tailwindcss -c tailwind.config.js -m -i ./src/styles/index.css -o ./src/styles/tailwind.css",
