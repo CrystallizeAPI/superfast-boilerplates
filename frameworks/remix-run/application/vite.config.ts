@@ -7,6 +7,9 @@ export default defineConfig({
     server: {
         port: process.env.REMIX_APP_PORT || 3000
     },
+    resolve: {
+        preserveSymlinks: true
+    },
     plugins: [remix({
         appDirectory: "src",
         serverModuleFormat: "esm"
