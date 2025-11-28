@@ -1,0 +1,80 @@
+name: Guardrail Gate (PR & Push)
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+    branches: ["**"]
+
+permissions:
+  contents: read
+
+jobs:
+  guardrail:
+    name: Guardrail Gate
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PowerShell (Ubuntu)
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget apt-transport-https software-properties-common
+          wget -q https://packages.microsoft.com/config/ubuntu/22.04/packages-microsoft-prod.deb
+          sudo dpkg -i packages-microsoft-prod.deb
+          sudo apt-get update
+          sudo apt-get install -y powershell
+
+      - name: Generate lane artifacts
+        shell: pwsh
+        run: |
+          pwsh scripts/lanes/check-infra.ps1
+          pwsh scripts/lanes/check-sec.ps1
+          pwsh scripts/lanes/check-web-build.ps1
+          pwsh scripts/lanes/check-data.ps1
+          pwsh scripts/lanes/check-obs.ps1
+          pwsh scripts/lanes/check-perf.ps1
+          pwsh scripts/lanes/check-a11y.ps1
+          pwsh scripts/lanes/check-gov.ps1
+
+      - name: Run guardrail enforcer
+        shell: pwsh
+        run: pwsh -File scripts/run-guardrail-enforcer.ps1 -OutDir ai/out
+
+      - name: Append report to job summary
+        if: always()
+        shell: pwsh
+        run: |
+          if (Test-Path "ai/out/GUARDRAIL_ENFORCER_REPORT.md") {
+            $content = Get-Content "ai/out/GUARDRAIL_ENFORCER_REPORT.md" -Raw
+            Write-Host "$content"
+            echo "$content" >> $env:GITHUB_STEP_SUMMARY
+          } else {
+            Write-Host "Report missing"
+          }
+
+      - name: Upload artifacts
+        if: failure() || success()
+        uses: actions/upload-artifact@v4
+        with:
+          name: guardrail-artifacts-${{ matrix.os }}
+          path: |
+            ai/out/LANE_*.md
+            ai/out/GUARDRAIL_ENFORCER_REPORT.md
+
+      - name: Slack notify on failure (optional)
+        if: failure() && env.SLACK_WEBHOOK_URL != ''
+        uses: slackapi/slack-github-action@v1.24.0
+        with:
+          payload: |
+            {
+              "text": "Guardrail Gate failed on ${{ matrix.os }} for ${{ github.repository }}@${{ github.ref }}. See artifacts and report."
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
